@@ -1,0 +1,91 @@
+{
+	"configuration": {
+		"providers": {
+			"Simbad": {
+				"search_fields": ["otype",
+                                  "sptype",
+                                  "gen",
+                                  "ubv",
+                                  "v*",
+                                  "orv",
+                                  "fluxdata(V)",
+                                  "pmra",
+                                  "pmdec",
+                                  "plx",
+                                  "dimensions",
+                                  "diameter",
+                                  "morphtype",
+                                  "distance",
+                                  "fe_h",
+                                  "rot"],
+				"log_filename": "zenith_SIMBAD.log",
+				"server": "simbad.u-strasbg.fr",
+				"mirrors": ["simbad.harvard.edu"],
+				"timeout": 60
+			}
+		},
+		"services": {
+			"url_schemes": {
+				"search": "/api/search/([0-9]+)",
+				"spectra": "/api/spectra/([0-9]+)",
+				"images": "/api/image/([0-9]+)",
+				"general": "/api/([0-9]+)"
+			}
+		},
+        "vo_app":{
+            "port":9191,
+            "api_name":"api"
+        },
+        "logging":{
+			  "version": 1,
+			  "disable_existing_loggers": false,
+			  "formatters": {
+					  "simple": {
+						  "format": "'%(asctime)s : %(message)s'"
+					  }
+			  },
+
+			  "handlers": {
+				  "console": {
+					  "class": "logging.StreamHandler",
+					  "level": "DEBUG",
+					  "formatter": "simple",
+					  "stream": "ext://sys.stdout"
+				  },
+
+				  "info_file_handler": {
+					  "class": "logging.handlers.RotatingFileHandler",
+					  "level": "INFO",
+					  "formatter": "simple",
+					  "filename": "D:\\Programming\\Astronomy\\Dev\\ZenithLogs\\info.log",
+					  "maxBytes": 10485760,
+					  "backupCount": 20,
+					  "encoding": "utf8"
+				  },
+
+				  "error_file_handler": {
+					  "class": "logging.handlers.RotatingFileHandler",
+					  "level": "ERROR",
+					  "formatter": "simple",
+					  "filename": "D:\\Programming\\Astronomy\\Dev\\ZenithLogs\\errors.log",
+					  "maxBytes": 10485760,
+					  "backupCount": 20,
+					  "encoding": "utf8"
+				  }
+			  },
+
+			  "loggers": {
+				  "vo": {
+					  "level": "INFO",
+					  "handlers": ["info_file_handler", "error_file_handler"],
+					  "propagate": "no"
+				  }
+			  },
+
+			  "root": {
+				  "level": "INFO",
+				  "handlers": ["console"]
+			  }
+		}
+	}
+}

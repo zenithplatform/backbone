@@ -1,0 +1,26 @@
+{
+	"simbad": {
+		"common": {
+			"MAIN_ID": "object_name",
+			"OTYPE": "object_type",
+			"FLUX_V": "apparent_magnitude",
+			"oRV_RVel": "radial_velocity",
+			"PLX_VALUE": "parallax"
+		},
+		"star": {
+			"SP_TYPE": "spectral_type",
+			"V__vartyp": "variable_type"
+		},
+		"galaxy": {
+			"MORPH_TYPE": "morphologycal_type"
+		}
+	},
+    "vizier": {
+          "common": {
+          },
+          "star": {
+          },
+          "galaxy": {
+          }
+      }
+}

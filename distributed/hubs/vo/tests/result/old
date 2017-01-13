@@ -1,0 +1,513 @@
+__author__ = 'civa'
+
+import os, path
+import pprint
+from astroquery.utils.commons import TableList
+from astropy.table import Table
+from shared.converters import TableConverter
+from astroquery.simbad import Simbad
+from astroquery.vizier import Vizier
+from jsonweb.encode import dumper
+from shared.serialization import ProviderResultEncoder
+from vo_hub.model.provider_result import ProviderResult
+from vo_hub.vo_config import VoConfig
+
+def run_simbad():
+    root = os.path.abspath(os.path.join(__file__ ,"../../.."))
+    filename = os.path.join(root, 'vo_config.json')
+
+    config = VoConfig()
+    config.load(filename=filename)
+    Simbad.remove_votable_fields('coordinates')
+    Simbad.add_votable_fields('ra(2;A;ICRS;J2000)', 'dec(2;D;ICRS;2000)')
+    Simbad.add_votable_fields('ra(2;A;FK5;J2000)', 'dec(2;D;FK5;2000)')
+    #print Simbad.get_field_description('coordinates')
+    #Simbad.reset_votable_fields()
+    #print Simbad._VOTABLE_FIELDS
+    # fields = config.find_by_path("configuration.providers.Simbad.search_fields")
+    #
+    # for field in fields:
+    #     Simbad.add_votable_fields(field)
+
+
+    #Simbad.add_votable_fields('coo(ICRS)')
+    #Simbad.add_votable_fields('coo(FK5)')
+    #Simbad.add_votable_fields('coo(FK4)')
+    #Simbad.add_votable_fields('coo(GAL)')
+
+    table = Simbad.query_object("Betelgeuse", wildcard=False)
+    # print process_simbad_result(table)
+    # Simbad.ROW_LIMIT = 5
+    # table = Simbad.query_region("05h35m17.3s -05h23m28s", radius='0d10m0s')
+    dict_collection = TableConverter.extract(table)
+    pp = pprint.PrettyPrinter(indent=4)
+    pp.pprint(dict_collection)
+    # for row in table:
+    #     ids = Simbad.query_objectids(row["MAIN_ID"])
+    #     dictionary['identifiers'] = TableConverter.to_dict(ids, True)['ID']
+
+    for single in dict_collection:
+        ids = Simbad.query_objectids(single["MAIN_ID"])
+        single['identifiers'] = TableConverter.to_dict(ids, True)['ID']
+        result = ProviderResult(single, 'Object', 'Simbad')
+        print(dumper(result, cls=ProviderResultEncoder))
+    #print process_simbad_result(table)
+
+def result_test_single():
+    root = os.path.abspath(os.path.join(__file__ ,"../../.."))
+    filename = os.path.join(root, 'vo_config.json')
+
+    config = VoConfig()
+    config.load(filename=filename)
+
+    fields = config.find_by_path("configuration.providers.Simbad.search_fields")
+
+    for field in fields:
+        Simbad.add_votable_fields(field)
+
+    table = Simbad.query_object("Betelgeuse", wildcard=False)
+    process_simbad_result(table)
+
+def result_test_multi():
+    root = os.path.abspath(os.path.join(__file__ ,"../../.."))
+    filename = os.path.join(root, 'vo_config.json')
+
+    config = VoConfig()
+    config.load(filename=filename)
+
+    fields = config.find_by_path("configuration.providers.Simbad.search_fields")
+
+    for field in fields:
+        Simbad.add_votable_fields(field)
+
+    table = Simbad.query_region("05h35m17.3s -05h23m28s", radius='0d10m0s')
+    process_simbad_result(table)
+
+def result_test_coordinates():
+    root = os.path.abspath(os.path.join(__file__ ,"../../.."))
+    filename = os.path.join(root, 'vo_config.json')
+
+    config = VoConfig()
+    config.load(filename=filename)
+    Simbad.remove_votable_fields('coordinates')
+    Simbad.add_votable_fields('ra(2;A;ICRS;J2000)', 'dec(2;D;ICRS;2000)')
+    Simbad.add_votable_fields('ra(2;A;FK5;J2000)', 'dec(2;D;FK5;2000)')
+
+    table = Simbad.query_object("Betelgeuse", wildcard=False)
+    process_simbad_result(table)
+
+def run_vizier():
+    tables = Vizier.query_region("3C 273", radius="0d6m0s", catalog='GSC')
+    # table_list = TableConverter.to_dict_multi(tables)
+
+def process_simbad_result(table):
+    dict_collection = TableConverter.extract(table)
+
+    for single in dict_collection:
+        ids = Simbad.query_objectids(single["MAIN_ID"])
+        single['identifiers'] = TableConverter.to_dict(ids, True)['ID']
+        result = ProviderResult(single, 'Object', 'Simbad')
+        print(dumper(result, cls=ProviderResultEncoder))
+
+# def process_simbad_result(table):
+#     dictionary = TableConverter.to_dict(table, True)
+#
+#     for row in table:
+#         ids = Simbad.query_objectids(row["MAIN_ID"])
+#         dictionary['identifiers'] = TableConverter.to_dict(ids, True)['ID']
+#
+#     result = ProviderResult(dictionary, 'Object', 'Simbad')
+#     return dumper(result)
+
+def test():
+    Simbad.remove_votable_fields('coordinates')
+    Simbad.add_votable_fields('ra(:;A;ICRS;J2000)', 'dec(:;D;ICRS;2000)')
+    Simbad.add_votable_fields('ra(:;A;FK5;J2000)', 'dec(:;D;FK5;2000)')
+
+    table = Simbad.query_object("Betelgeuse", wildcard=False)
+    print table
+
+if __name__ == "__main__":
+    test()
+
+# def run():
+#     root = os.path.abspath(os.path.join(__file__ ,"../../.."))
+#     filename = os.path.join(root, 'vo_config.json')
+#
+#     config = VoConfig()
+#     config.load(filename=filename)
+#     Simbad.reset_votable_fields()
+#     fields = config.find_by_path("configuration.providers.Simbad.search_fields")
+#
+#     for field in fields:
+#         Simbad.add_votable_fields(field)
+#
+#     table = Simbad.query_object("Betelgeuse", wildcard=False)
+#     print process_simbad_result(table)
+    # dictionary = TableConverter.to_dict(table, True)
+    #
+    # for row in table:
+    #     ids = Simbad.query_objectids(row["MAIN_ID"])
+    #     dictionary['identifiers'] = TableConverter.to_dict(ids, True)['ID']
+    #
+    # result = ProviderResult(dictionary, 'Object', 'Simbad')
+    # json_result = dumper(result)
+    # tables = Vizier.query_region("3C 273", radius="0d6m0s", catalog='GSC')
+    # table_list = TableConverter.to_dict_multi(tables)
+
+
+
+
+
+      '''
+    import re
+    wire_dict = {'source1_destination1_1' : 'object1',
+                  'source1_destination1_2' : 'object2',
+                  'source2_destination1_3' : 'object3',
+                  'source2_destination1_4' : 'object4',
+                  'source2_destination2_1' : 'object5',
+                  'source2_destination2_2' : 'object6' }
+    pattern = 'source1_destination1_1'
+    print [value for key, value in wire_dict.items() if re.search(pattern, key)]
+    '''
+
+  # class OTypeDecoder(json.JSONDecoder):
+#
+#     def __init__(self, *args, **kargs):
+#         JSONDecoder.__init__(self, object_hook=self.dict_to_object,
+#                              *args, **kargs)
+#
+#     def dict_to_object(self, d):
+#         if '__type__' not in d:
+#             return d
+#
+#         type = d.pop('__type__')
+#         try:
+#             print d
+#             # dateobj = datetime(**d)
+#             # return dateobj
+#         except:
+#             d['__type__'] = type
+#             return d
+#
+# def _to_object(d):
+#     try:
+#         identifier = d['identifier']
+#         short_name = d['short_name']
+#         short_code = d['short_code']
+#         description = d['description']
+#
+#         if 'subtypes' in d:
+#             otype = ObjectType(identifier, short_name, short_code, description)
+#             otype.subtypes.append(d['subtypes'])
+#             return otype
+#
+#         return ObjectType(identifier, short_name, short_code, description)
+#     except:
+#         raise
+#     #if identifier and isinstance(identifier, str):
+#
+#     #
+#
+#     # if 'subtypes' in d:
+#     #     for k, v in d.iteritems():
+#     #         obj_type.subtypes = [_to_object(subtype) for subtype in d['subtypes']]
+
+# class ObjectTypes():
+#
+#     data = {}
+#
+#     def __init__(self):
+#         if not self.data:
+#             self._load()
+#
+#     def _load(self):
+#         try:
+#             root = os.path.abspath(os.path.join(__file__ ,"../../data"))
+#             filename = os.path.join(root, 'ot_stripped.json')
+#             f = file(filename, "r")
+#             str_data = f.read()
+#             f.close()
+#
+#             self.data = json.loads(str_data)
+#             otype = ObjectType(**self.data)
+#             print('test')
+#         except:
+#             raise
+#
+#     def get(self, subtype):
+#         found = DictQuery(self.data).find('short_name', subtype)
+#
+#         if found:
+#             identifier = found['identifier']
+#             id_parts = identifier.split('.')
+#             root_id_parts = []
+#
+#             root_id_parts.append(id_parts[0])
+#             id_parts.pop(0)
+#
+#             for id in id_parts:
+#                 if len(str(id)) == 2:
+#                     root_id_parts.append('00')
+#                 else:
+#                     root_id_parts.append('0')
+#
+#             parent_root = DictQuery(self.data).find('identifier', '.'.join(root_id_parts))
+#
+#             if parent_root:
+#                 return parent_root['short_name']
+#             else:
+#                 return 'Unknown object type'
+
+# def objtype_decoder(cls, obj):
+#     subtypes = obj["subtypes"]
+#
+#     if subtypes:
+#         for subtype in subtypes:
+#             objtype_decoder(cls, subtype)
+#
+#         return cls(
+#            obj["identifier"],
+#            obj["short_name"],
+#            obj["short_code"],
+#            obj["description"],
+#            obj["subtypes"]
+#         )
+#
+# @from_object(objtype_decoder)
+
+
+
+
+
+
+    # def format(self, frame, values):
+    #     coo_dict = values[0]
+    #     ra = None
+    #     dec = None
+    #     gal_l = None
+    #     gal_b = None
+    #     coo_frame = frame.lower()
+    #
+    #     if frame == 'ICRS':
+    #         ra = self.skycoord.fk5.ra
+    #         dec = self.skycoord.fk5.dec
+    #     if frame == 'FK5':
+    #         ra = self.skycoord.fk5.ra
+    #         dec = self.skycoord.fk5.dec
+    #     elif frame== 'FK4':
+    #         ra = self.skycoord.fk4.ra
+    #         dec = self.skycoord.fk4.dec
+    #     elif frame == 'GAL':
+    #         coo_frame = 'galactic'
+    #         gal_l = self.skycoord.galactic.l
+    #         gal_b = self.skycoord.galactic.b
+    #
+    #     if frame == 'GAL':
+    #         self.values.append({'frame' : frame,
+    #                             'galactic_latitude' : gal_l.to_string(u.hour),
+    #                             'galactic_latitude_precision' : coo_dict['RA_PREC'],
+    #                             'galactic_longitude' : gal_b.to_string(u.degree, alwayssign=True),
+    #                             'galactic_longitude_precision' : coo_dict['DEC_PREC'],
+    #                             'error_angle' : DictQuery(coo_dict).get('COO_ERR_ANGLE_{}*'.format(frame)),
+    #                             'error_min_axis' : DictQuery(coo_dict).get('COO_ERR_MINA_{}*'.format(frame)),
+    #                             'error_major_axis' : DictQuery(coo_dict).get('COO_ERR_MAJA_{}*'.format(frame)),
+    #                             'wavelength': self.get_wavelegth(coo_dict['COO_WAVELENGTH']) })
+    #     else:
+    #         self.values.append({'frame' : frame,
+    #                             'right_ascension' : ra.to_string(u.hour),
+    #                             'right_ascension_precision' : coo_dict['RA_PREC'],
+    #                             'declination' : dec.to_string(u.degree, alwayssign=True),
+    #                             'declination_precision' : coo_dict['DEC_PREC'],
+    #                             'error_angle' : DictQuery(coo_dict).get('COO_ERR_ANGLE_{}*'.format(frame)),
+    #                             'error_min_axis' : DictQuery(coo_dict).get('COO_ERR_MINA_{}*'.format(frame)),
+    #                             'error_major_axis' : DictQuery(coo_dict).get('COO_ERR_MAJA_{}*'.format(frame)),
+    #                             'wavelength': self.get_wavelegth(coo_dict['COO_WAVELENGTH']) })
+
+    # def get_skycoord(self, all_coo):
+    #     coo_list = None
+    #
+    #     for coo in all_coo:
+    #         frame = coo.keys()[0]
+    #
+    #         if frame == 'ICRS':
+    #             coo_list = coo.values()[0]
+    #             break
+    #
+    #     dict = coo_list[0]
+    #     split_char = ' '
+    #     raw_ra = DictQuery(dict).get('RA_{}*'.format('ICRS'))
+    #     raw_dec = DictQuery(dict).get('DEC_{}*'.format('ICRS'))
+    #
+    #     if ':' in raw_ra or ':' in raw_dec:
+    #         split_char = ':'
+    #
+    #     self.skycoord = SkyCoord(ra='{}h{}m{}s'.format(*raw_ra.split(split_char)),
+    #                       dec='{}d{}m{}s'.format(*raw_dec.split(split_char)),
+    #                       frame='icrs')
+
+
+    # def format(self, frame, values):
+    #     if frame == 'GAL':
+    #         coo_frame = 'galactic'
+    #     else:
+    #         coo_frame = frame.lower()
+    #
+    #     dict = values[0]
+    #     split_char = ' '
+    #     raw_ra = DictQuery(dict).get('RA_{}*'.format(frame))
+    #     raw_dec = DictQuery(dict).get('DEC_{}*'.format(frame))
+    #
+    #     if ':' in raw_ra or ':' in raw_dec:
+    #         split_char = ':'
+    #
+    #     coords = SkyCoord(ra='{}h{}m{}s'.format(*raw_ra.split(split_char)),
+    #                       dec='{}d{}m{}s'.format(*raw_dec.split(split_char)),
+    #                       frame=coo_frame)
+    #
+    #     self.values.append({'frame' : frame,
+    #                         'right_ascension' : coords.ra.to_string(u.hour),
+    #                         'right_ascension_precision' : dict['RA_PREC'],
+    #                         'declination' : coords.dec.to_string(u.degree, alwayssign=True),
+    #                         'declination_precision' : dict['DEC_PREC'],
+    #                         'error_angle' : DictQuery(dict).get('COO_ERR_ANGLE_{}*'.format(frame)),
+    #                         'error_min_axis' : DictQuery(dict).get('COO_ERR_MINA_{}*'.format(frame)),
+    #                         'error_major_axis' : DictQuery(dict).get('COO_ERR_MAJA_{}*'.format(frame)),
+    #                         'wavelength': self.get_wavelegth(dict['COO_WAVELENGTH']) })
+
+
+        # if 'coordinates' in result:
+        #     self.frames = result['coordinates']
+        # else:
+        #     return {'coordinates' : 'Unknown'}
+        #
+        # coords = SkyCoord(ra=['{}h{}m{}s'.format(*ra.split(':')) for ra in table['RA___A_ICRS_J2000']],
+        #           dec=['{}d{}m{}s'.format(*dec.split(':')) for dec in table['DEC___D_ICRS_2000']],
+        #           frame='icrs', equinox='J2000')
+        #
+        # for frame in self.frames:
+        #     self.get_values(frame)
+        #
+        # return {'coordinates' : self.values}
+
+    # def get_values(self, original_values):
+    #     ra = None
+    #     dec = None
+    #     err_angle = None
+    #     err_major_axis = None
+    #     err_minor_axis = None
+    #     wavelength = None
+    #     frame = ''
+    #
+    #
+    #
+    #     self.values.append({'frame' : frame,
+    #                         'declination' : dec,
+    #                         'right_ascension' : ra,
+    #                         'error_angle' : err_angle,
+    #                         'error_min_axis' : err_minor_axis,
+    #                         'error_major_axis' : err_major_axis,
+    #                         'wavelength': wavelength })
+
+# class CoordinatesExtractor(object):
+#     coordinate_patterns = { 'ICRS' : ['RA_ICRS*', 'DEC_ICRS*', 'COO_ERR_ANGLE_ICRS*', 'COO_ERR_MAJA_ICRS*', 'COO_ERR_MINA_ICRS*'],
+#                             'FK5' : ['RA_FK5*', 'DEC_FK5*', 'COO_ERR_ANGLE_FK5*', 'COO_ERR_MAJA_FK5*', 'COO_ERR_MINA_FK5*'],
+#                             'FK4' : ['RA_FK4*', 'DEC_FK4*', 'COO_ERR_ANGLE_FK4*', 'COO_ERR_MAJA_FK4*', 'COO_ERR_MINA_FK4*'],
+#                             'GAL': ['RA_GAL*', 'DEC_GAL*', 'COO_ERR_ANGLE_GAL*', 'COO_ERR_MAJA_GAL*', 'COO_ERR_MINA_GAL*']
+#     }
+#
+#     name = ''
+#     frames = []
+#     values = []
+#
+#     def extract(self, **kwargs):
+#         result = kwargs['result']
+#
+#         if 'coordinates' in result:
+#             self.frames = result['coordinates']
+#         else:
+#             return {'coordinates' : 'Unknown'}
+#
+#         for frame in self.frames:
+#             self.get_values(frame)
+#
+#         return {'coordinates' : self.values}
+#
+#     def get_values(self, original_values):
+#         ra = None
+#         dec = None
+#         err_angle = None
+#         err_major_axis = None
+#         err_minor_axis = None
+#         wavelength = None
+#         frame = ''
+#
+#         for val in original_values.keys():
+#             if 'ICRS' in val:
+#                 frame = 'ICRS'
+#                 break
+#             elif 'FK5' in val:
+#                 frame = 'FK5'
+#                 break
+#             elif 'FK4' in val:
+#                 frame = 'FK4'
+#                 break
+#             elif 'GAL' in val:
+#                 frame = 'GAL'
+#                 break
+#
+#         if not frame:
+#             frame = 'ICRS'
+#
+#         pattern_list = self.coordinate_patterns[frame]
+#         pattern_list.append('COO_WAVELENGTH')
+#
+#         for k, v in original_values.iteritems():
+#             for item in pattern_list:
+#                 x = re.search(item, k)
+#
+#                 if x is not None:
+#                     if 'RA' in x.string:
+#                         ra = v
+#                         break
+#                     elif 'DEC' in x.string:
+#                         dec = v
+#                         break
+#                     elif 'COO_ERR_ANGLE' in x.string:
+#                         err_angle = v
+#                         break
+#                     elif 'COO_ERR_MAJA' in x.string:
+#                         err_major_axis = v
+#                         break
+#                     elif 'COO_ERR_MINA' in x.string:
+#                         err_minor_axis = v
+#                         break
+#                     elif 'COO_WAVELENGTH' in x.string:
+#                         #(Rad, mm, IR, Optical, UV, Xray, Gam
+#                         if v == 'G':
+#                             wavelength = 'gamma'
+#                         elif v == 'X':
+#                             wavelength = 'x-ray'
+#                         elif v == 'U':
+#                             wavelength = 'ultra-violet'
+#                         elif v == 'O':
+#                             wavelength = 'optical'
+#                         elif v == 'I':
+#                             wavelength = 'infra-red'
+#                         elif v == 'm':
+#                             wavelength = 'microwave'
+#                         elif v == 'R':
+#                             wavelength = 'radio'
+#                         else:
+#                             wavelength = 'unknown'
+#                         break
+#                 else:
+#                     continue
+#
+#         self.values.append({'frame' : frame,
+#                             'declination' : dec,
+#                             'right_ascension' : ra,
+#                             'error_angle' : err_angle,
+#                             'error_min_axis' : err_minor_axis,
+#                             'error_major_axis' : err_major_axis,
+#                             'wavelength': wavelength })

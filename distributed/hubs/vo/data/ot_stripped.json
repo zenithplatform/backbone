@@ -1,0 +1,44 @@
+{
+	"types": [
+        {
+            "identifier": "00.00.00.0",
+            "short_name": "Unknown",
+            "short_code": "?",
+            "description": "Object of unknown nature"
+        },
+        {
+            "identifier": "00.02.00.0",
+            "short_name": "Transient",
+            "short_code": "ev",
+            "description": "transient event",
+            "subtypes": [
+                {
+                    "identifier": "01.00.00.0",
+                    "short_name": "Radio",
+                    "short_code": "Rad",
+                    "description": "Radio-source",
+                    "subtypes": [
+                        {
+                            "identifier": "01.02.00.0",
+                            "short_name": "Radio(m)",
+                            "short_code": "mR",
+                            "description": "metric Radio-source"
+                        },
+                        {
+                            "identifier": "01.04.00.0",
+                            "short_name": "Radio(cm)",
+                            "short_code": "cm",
+                            "description": "centimetric Radio-source"
+                        },
+                        {
+                            "identifier": "01.06.00.0",
+                            "short_name": "Radio(mm)",
+                            "short_code": "mm",
+                            "description": "millimetric Radio-source"
+                        }
+                    ]
+                }
+            ]
+        }
+	]
+}

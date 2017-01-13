@@ -1,0 +1,68 @@
+{
+	"params": {
+		"term": "Betelgeuse",
+		"exact": false,
+		"cone": true,
+		"target": "Object",
+		"region": "m81",
+		"radius": "0d6m0s",
+		"coordinates": "05h35m17.3s -05h23m28s",
+		"epoch": "B1950",
+		"equinox": 1950
+	}
+}
+
+{
+	"params": {
+		"term": "m81",
+		"exact": false,
+		"cone": true,
+		"target": "Object",
+		"region": "m81",
+		"radius": "0d6m0s"
+	}
+}
+
+{
+	"params": {
+		"term": "m81",
+		"exact": false,
+		"cone": true,
+		"target": "Object",
+		"region": "m81",
+		"radius": "0d2m0s"
+	}
+}
+
+{
+	"params": {
+		"term": "Hipparcos",
+		"target": "Catalog",
+		"obsolete_catalogs": false,
+		"all" : true
+	}
+}
+
+{
+	"vo_params": {
+		"preamble":"83fac637bc8a6306ce4df3847af87b68de27733f"
+		"term": "m81",
+		"exact": false,
+		"cone": true,
+		"target": "Object",
+		"region": "m81",
+		"radius": "0d6m0s"
+	}
+}
+
+{
+	"auth_params": {
+		"preamble":"83fac637bc8a6306ce4df3847af87b68de27733f"
+		"term": "m81",
+		"exact": false,
+		"cone": true,
+		"target": "Object",
+		"region": "m81",
+		"radius": "0d6m0s"
+	}
+}

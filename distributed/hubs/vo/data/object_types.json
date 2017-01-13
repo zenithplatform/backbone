@@ -1,0 +1,1508 @@
+{
+    "types": [
+        {
+            "identifier": "00.00.00.0",
+            "short_name": "Unknown",
+            "short_code": "?",
+            "description": "Object of unknown nature"
+        },
+        {
+            "identifier": "00.02.00.0",
+            "short_name": "Transient",
+            "short_code": "ev",
+            "description": "transient event",
+            "subtypes": [
+                {
+                    "identifier": "01.00.00.0",
+                    "short_name": "Radio",
+                    "short_code": "Rad",
+                    "description": "Radio-source",
+                    "subtypes": [
+                        {
+                            "identifier": "01.02.00.0",
+                            "short_name": "Radio(m)",
+                            "short_code": "mR",
+                            "description": "metric Radio-source"
+                        },
+                        {
+                            "identifier": "01.04.00.0",
+                            "short_name": "Radio(cm)",
+                            "short_code": "cm",
+                            "description": "centimetric Radio-source"
+                        },
+                        {
+                            "identifier": "01.06.00.0",
+                            "short_name": "Radio(mm)",
+                            "short_code": "mm",
+                            "description": "millimetric Radio-source"
+                        },
+                        {
+                            "identifier": "01.08.00.0",
+                            "short_name": "Radio(sub-mm)",
+                            "short_code": "smm",
+                            "description": "sub-millimetric source"
+                        },
+                        {
+                            "identifier": "01.11.00.0",
+                            "short_name": "HI",
+                            "short_code": "HI",
+                            "description": "HI (21cm) source"
+                        },
+                        {
+                            "identifier": "01.12.00.0",
+                            "short_name": "radioBurst",
+                            "short_code": "rB",
+                            "description": "radio Burst"
+                        },
+                        {
+                            "identifier": "01.14.00.0",
+                            "short_name": "Maser",
+                            "short_code": "Mas",
+                            "description": "Maser"
+                        }
+                    ]
+                },
+                {
+                    "identifier": "02.00.00.0",
+                    "short_name": "IR",
+                    "short_code": "IR",
+                    "description": "Infra-Red source",
+                    "subtypes": [
+                        {
+                            "identifier": "02.02.00.0",
+                            "short_name": "IR>30um",
+                            "short_code": "FIR",
+                            "description": "Far-IR source  (λ >= 30 µm)"
+                        },
+                        {
+                            "identifier": "02.04.00.0",
+                            "short_name": "IR<10um",
+                            "short_code": "NIR",
+                            "description": "Near-IR source (λ < 10 µm)"
+                        }
+                    ]
+                },
+                {
+                    "identifier": "03.00.00.0",
+                    "short_name": "Red",
+                    "short_code": "red",
+                    "description": "Very red source",
+                    "subtypes": [
+                        {
+                            "identifier": "03.03.00.0",
+                            "short_name": "RedExtreme",
+                            "short_code": "ERO",
+                            "description": "Extremely Red Object"
+                        }
+                    ]
+                },
+                {
+                    "identifier": "04.00.00.0",
+                    "short_name": "Blue",
+                    "short_code": "blu",
+                    "description": "Blue object"
+                },
+                {
+                    "identifier": "05.00.00.0",
+                    "short_name": "UV",
+                    "short_code": "UV",
+                    "description": "UV-emission source"
+                },
+                {
+                    "identifier": "06.00.00.0",
+                    "short_name": "X",
+                    "short_code": "X",
+                    "description": "X-ray source",
+                    "subtypes": [
+                        {
+                            "identifier": "06.02.00.0",
+                            "short_name": "ULX?",
+                            "short_code": "UX?",
+                            "description": "Ultra-luminous X-ray candidate"
+                        },
+                        {
+                            "identifier": "06.10.00.0",
+                            "short_name": "ULX",
+                            "short_code": "ULX",
+                            "description": "Ultra-luminous X-ray source"
+                        }
+                    ]
+                },
+                {
+                    "identifier": "07.00.00.0",
+                    "short_name": "gamma",
+                    "short_code": "gam",
+                    "description": "gamma-ray source",
+                    "subtypes": [
+                        {
+                            "identifier": "07.03.00.0",
+                            "short_name": "gammaBurst",
+                            "short_code": "gB",
+                            "description": "gamma-ray Burst"
+                        }
+                    ]
+                },
+                {
+                    "identifier": "08.00.00.0",
+                    "short_name": "Inexistent",
+                    "short_code": "err",
+                    "description": "Not an object (error, artefact, ...)"
+                },
+                {
+                    "identifier": "09.00.00.0",
+                    "short_name": "Gravitation",
+                    "short_code": "grv",
+                    "description": "Gravitational Source",
+                    "subtypes": [
+                        {
+                            "identifier": "09.03.00.0",
+                            "short_name": "LensingEv",
+                            "short_code": "Lev",
+                            "description": "(Micro)Lensing Event"
+                        },
+                        {
+                            "identifier": "09.06.00.0",
+                            "short_name": "Candidate_LensSystem",
+                            "short_code": "LS?",
+                            "description": "Possible gravitational lens System"
+                        },
+                        {
+                            "identifier": "09.07.00.0",
+                            "short_name": "Candidate_Lens",
+                            "short_code": "Le?",
+                            "description": "Possible gravitational lens"
+                        },
+                        {
+                            "identifier": "09.08.00.0",
+                            "short_name": "Possible_lensImage",
+                            "short_code": "LI?",
+                            "description": "Possible gravitationally lensed image"
+                        },
+                        {
+                            "identifier": "09.09.00.0",
+                            "short_name": "GravLens",
+                            "short_code": "gLe",
+                            "description": "Gravitational Lens"
+                        },
+                        {
+                            "identifier": "09.11.00.0",
+                            "short_name": "GravLensSystem",
+                            "short_code": "gLS",
+                            "description": "Gravitational Lens System (lens+images)"
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "identifier": "10.00.00.0",
+            "short_name": "Candidates",
+            "short_code": "..?",
+            "description": "Candidate objects",
+            "subtypes": [
+                {
+                    "identifier": "10.01.00.0",
+                    "short_name": "Possible_G",
+                    "short_code": "G?",
+                    "description": "Possible Galaxy"
+                },
+                {
+                    "identifier": "10.02.00.0",
+                    "short_name": "Possible_SClG",
+                    "short_code": "SC?",
+                    "description": "Possible Supercluster of Galaxies"
+                },
+                {
+                    "identifier": "10.03.00.0",
+                    "short_name": "Possible_ClG",
+                    "short_code": "C?G",
+                    "description": "Possible Cluster of Galaxies"
+                },
+                {
+                    "identifier": "10.04.00.0",
+                    "short_name": "Possible_GrG",
+                    "short_code": "Gr?",
+                    "description": "Possible Group of Galaxies"
+                },
+                {
+                    "identifier": "10.06.00.0",
+                    "short_name": "Possible_As*",
+                    "short_code": "As?",
+                    "description": ""
+                },
+                {
+                    "identifier": "10.11.00.0",
+                    "short_name": "Candidate_**",
+                    "short_code": "**?",
+                    "description": "Physical Binary Candidate",
+                    "subtypes": [
+                        {
+                            "identifier": "10.11.01.0",
+                            "short_name": "Candidate_EB*",
+                            "short_code": "EB?",
+                            "description": "Eclipsing Binary Candidate"
+                        },
+                        {
+                            "identifier": "10.11.10.0",
+                            "short_name": "Candidate_Symb*",
+                            "short_code": "Sy?",
+                            "description": "Symbiotic Star Candidate"
+                        },
+                        {
+                            "identifier": "10.11.11.0",
+                            "short_name": "Candidate_CV*",
+                            "short_code": "CV?",
+                            "description": "Cataclysmic Binary Candidate"
+                        },
+                        {
+                            "identifier": "10.11.11.6",
+                            "short_name": "Candidate_Nova",
+                            "short_code": "No?",
+                            "description": "Nova Candidate"
+                        },
+                        {
+                            "identifier": "10.11.12.0",
+                            "short_name": "Candidate_XB*",
+                            "short_code": "XB?",
+                            "description": "X-ray binary Candidate"
+                        },
+                        {
+                            "identifier": "10.11.12.2",
+                            "short_name": "Candidate_LMXB",
+                            "short_code": "LX?",
+                            "description": "Low-Mass X-ray binary Candidate"
+                        },
+                        {
+                            "identifier": "10.11.12.3",
+                            "short_name": "Candidate_HMXB",
+                            "short_code": "HX?",
+                            "description": "High-Mass X-ray binary Candidate"
+                        }
+                    ]
+                },
+                {
+                    "identifier": "10.12.00.0",
+                    "short_name": "Candidate_Pec*",
+                    "short_code": "Pec?",
+                    "description": "Possible Peculiar Star",
+                    "subtypes": [
+                        {
+                            "identifier": "10.12.01.0",
+                            "short_name": "Candidate_YSO",
+                            "short_code": "Y*?",
+                            "description": "Young Stellar Object Candidate"
+                        },
+                        {
+                            "identifier": "10.12.02.0",
+                            "short_name": "Candidate_pMS*",
+                            "short_code": "pr?",
+                            "description": "Pre-main sequence Star Candidate",
+                            "subtypes": [
+                                {
+                                    "identifier": "10.12.02.3",
+                                    "short_name": "Candidate_TTau*",
+                                    "short_code": "TT?",
+                                    "description": "T Tau star Candidate"
+                                }
+                            ]
+                        },
+                        {
+                            "identifier": "10.12.03.0",
+                            "short_name": "Candidate_C*",
+                            "short_code": "C*?",
+                            "description": "Possible Carbon Star"
+                        },
+                        {
+                            "identifier": "10.12.04.0",
+                            "short_name": "Candidate_S*",
+                            "short_code": "S*?",
+                            "description": "Possible S Star"
+                        },
+                        {
+                            "identifier": "10.12.05.0",
+                            "short_name": "Candidate_OH",
+                            "short_code": "OH?",
+                            "description": "Possible Star with envelope of OH/IR type"
+                        },
+                        {
+                            "identifier": "10.12.06.0",
+                            "short_name": "Candidate_CH",
+                            "short_code": "CH?",
+                            "description": "Possible Star with envelope of CH type"
+                        },
+                        {
+                            "identifier": "10.12.07.0",
+                            "short_name": "Candidate_WR*",
+                            "short_code": "WR?",
+                            "description": "Possible Wolf-Rayet Star"
+                        },
+                        {
+                            "identifier": "10.12.08.0",
+                            "short_name": "Candidate_Be*",
+                            "short_code": "Be?",
+                            "description": "Possible Be Star"
+                        },
+                        {
+                            "identifier": "10.12.09.0",
+                            "short_name": "Candidate_Ae*",
+                            "short_code": "Ae?",
+                            "description": "Possible Herbig Ae/Be Star"
+                        },
+                        {
+                            "identifier": "10.12.11.0",
+                            "short_name": "Candidate_HB*",
+                            "short_code": "HB?",
+                            "description": "Possible Horizontal Branch Star",
+                            "subtypes": [
+                                {
+                                    "identifier": "10.12.11.2",
+                                    "short_name": "Candidate_RRLyr",
+                                    "short_code": "RR?",
+                                    "description": "Possible Star of RR Lyr type"
+                                },
+                                {
+                                    "identifier": "10.12.11.3",
+                                    "short_name": "Candidate_Cepheid",
+                                    "short_code": "Ce?",
+                                    "description": "Possible Cepheid"
+                                }
+                            ]
+                        },
+                        {
+                            "identifier": "10.12.12.0",
+                            "short_name": "Candidate_RGB*",
+                            "short_code": "RB?",
+                            "description": "Possible Red Giant Branch star"
+                        },
+                        {
+                            "identifier": "10.12.13.0",
+                            "short_name": "Candidate_SG*",
+                            "short_code": "sg?",
+                            "description": "Possible Supergiant star"
+                        },
+                        {
+                            "identifier": "10.12.13.3",
+                            "short_name": "Candidate_RSG*",
+                            "short_code": "s?r",
+                            "description": "Possible Red supergiant star"
+                        },
+                        {
+                            "identifier": "10.12.13.4",
+                            "short_name": "Candidate_YSG*",
+                            "short_code": "s?y",
+                            "description": "Possible Yellow supergiant star"
+                        },
+                        {
+                            "identifier": "10.12.13.5",
+                            "short_name": "Candidate_BSG*",
+                            "short_code": "s?b",
+                            "description": "Possible Blue supergiant star"
+                        },
+                        {
+                            "identifier": "10.12.14.0",
+                            "short_name": "Candidate_AGB*",
+                            "short_code": "AB?",
+                            "description": "Asymptotic Giant Branch Star candidate"
+                        },
+                        {
+                            "identifier": "10.12.14.1",
+                            "short_name": "Candidate_LP*",
+                            "short_code": "LP?",
+                            "description": "Long Period Variable candidate"
+                        },
+                        {
+                            "identifier": "10.12.14.2",
+                            "short_name": "Candidate_Mi*",
+                            "short_code": "Mi?",
+                            "description": "Mira candidate"
+                        },
+                        {
+                            "identifier": "10.12.14.3",
+                            "short_name": "Candiate_sr*",
+                            "short_code": "sv?",
+                            "description": "Semi-regular variable candidate"
+                        },
+                        {
+                            "identifier": "10.12.15.0",
+                            "short_name": "Candidate_post-AGB*",
+                            "short_code": "pA?",
+                            "description": "Post-AGB Star Candidate"
+                        },
+                        {
+                            "identifier": "10.12.16.0",
+                            "short_name": "Candidate_BSS",
+                            "short_code": "BS?",
+                            "description": "Candidate blue Straggler Star"
+                        },
+                        {
+                            "identifier": "10.12.18.0",
+                            "short_name": "Candidate_WD*",
+                            "short_code": "WD?",
+                            "description": "White Dwarf Candidate"
+                        },
+                        {
+                            "identifier": "10.12.20.0",
+                            "short_name": "Candidate_NS",
+                            "short_code": "N*?",
+                            "description": "Neutron Star Candidate"
+                        },
+                        {
+                            "identifier": "10.12.22.0",
+                            "short_name": "Candidate_BH",
+                            "short_code": "BH?",
+                            "description": "Black Hole Candidate"
+                        },
+                        {
+                            "identifier": "10.12.23.0",
+                            "short_name": "Candidate_SN*",
+                            "short_code": "SN?",
+                            "description": "SuperNova Candidate"
+                        },
+                        {
+                            "identifier": "10.12.24.0",
+                            "short_name": "Candidate_low-mass*",
+                            "short_code": "LM?",
+                            "description": "Low-mass star candidate"
+                        },
+                        {
+                            "identifier": "10.12.26.0",
+                            "short_name": "Candidate_brownD*",
+                            "short_code": "BD?",
+                            "description": "Brown Dwarf Candidate"
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "identifier": "12.00.00.0",
+            "short_name": "multiple_object",
+            "short_code": "mul",
+            "description": "Composite object",
+            "subtypes": [
+                {
+                    "identifier": "12.01.00.0",
+                    "short_name": "Region",
+                    "short_code": "reg",
+                    "description": "Region defined in the sky",
+                    "subtypes": [
+                        {
+                            "identifier": "12.01.05.0",
+                            "short_name": "Void",
+                            "short_code": "vid",
+                            "description": "Underdense region of the Universe"
+                        }
+                    ]
+                },
+                {
+                    "identifier": "12.02.00.0",
+                    "short_name": "SuperClG",
+                    "short_code": "SCG",
+                    "description": "Supercluster of Galaxies"
+                },
+                {
+                    "identifier": "12.03.00.0",
+                    "short_name": "ClG",
+                    "short_code": "ClG",
+                    "description": "Cluster of Galaxies"
+                },
+                {
+                    "identifier": "12.04.00.0",
+                    "short_name": "GroupG",
+                    "short_code": "GrG",
+                    "description": "Group of Galaxies",
+                    "subtypes": [
+                        {
+                            "identifier": "12.04.05.0",
+                            "short_name": "Compact_Gr_G",
+                            "short_code": "CGG",
+                            "description": "Compact Group of Galaxies"
+                        }
+                    ]
+                },
+                {
+                    "identifier": "12.05.00.0",
+                    "short_name": "PairG",
+                    "short_code": "PaG",
+                    "description": "Pair of Galaxies",
+                    "subtypes": [
+                        {
+                            "identifier": "12.05.05.0",
+                            "short_name": "IG",
+                            "short_code": "IG",
+                            "description": "Interacting Galaxies"
+                        }
+                    ]
+                },
+                {
+                    "identifier": "12.09.00.0",
+                    "short_name": "Cl*?",
+                    "short_code": "C?*",
+                    "description": "Possible (open) star cluster"
+                },
+                {
+                    "identifier": "12.10.00.0",
+                    "short_name": "GlCl?",
+                    "short_code": "Gl?",
+                    "description": "Possible Globular Cluster"
+                },
+                {
+                    "identifier": "12.11.00.0",
+                    "short_name": "Cl*",
+                    "short_code": "Cl*",
+                    "description": "Cluster of Stars",
+                    "subtypes": [
+                        {
+                            "identifier": "12.11.01.0",
+                            "short_name": "GlCl",
+                            "short_code": "GlC",
+                            "description": "Globular Cluster"
+                        },
+                        {
+                            "identifier": "12.11.02.0",
+                            "short_name": "OpCl",
+                            "short_code": "OpC",
+                            "description": "Open (galactic) Cluster"
+                        }
+                    ]
+                },
+                {
+                    "identifier": "12.12.00.0",
+                    "short_name": "Assoc*",
+                    "short_code": "As*",
+                    "description": "Association of Stars",
+                    "subtypes": [
+                        {
+                            "identifier": "12.12.01.0",
+                            "short_name": "Stream*",
+                            "short_code": "St*",
+                            "description": "Stellar Stream"
+                        },
+                        {
+                            "identifier": "12.12.02.0",
+                            "short_name": "MouvGroup",
+                            "short_code": "MGr",
+                            "description": "Moving Group"
+                        }
+                    ]
+                },
+                {
+                    "identifier": "12.13.00.0",
+                    "short_name": "**",
+                    "short_code": "**",
+                    "description": "Double or multiple star",
+                    "subtypes": [
+                        {
+                            "identifier": "12.13.01.0",
+                            "short_name": "EB*",
+                            "short_code": "EB*",
+                            "description": "Eclipsing binary",
+                            "subtypes": [
+                                {
+                                    "identifier": "12.13.01.1",
+                                    "short_name": "EB*Algol",
+                                    "short_code": "Al*",
+                                    "description": "Eclipsing binary of Algol type (detached)"
+                                },
+                                {
+                                    "identifier": "12.13.01.2",
+                                    "short_name": "EB*betLyr",
+                                    "short_code": "bL*",
+                                    "description": "Eclipsing binary of beta Lyr type (semi-detached)"
+                                },
+                                {
+                                    "identifier": "12.13.01.3",
+                                    "short_name": "EB*WUMa",
+                                    "short_code": "WU*",
+                                    "description": "Eclipsing binary of W UMa type (contact binary)"
+                                },
+                                {
+                                    "identifier": "12.13.01.8",
+                                    "short_name": "EB*Planet",
+                                    "short_code": "EP*",
+                                    "description": "Star showing eclipses by its planet"
+                                }
+                            ]
+                        },
+                        {
+                            "identifier": "12.13.02.0",
+                            "short_name": "SB*",
+                            "short_code": "SB*",
+                            "description": "Spectroscopic binary"
+                        },
+                        {
+                            "identifier": "12.13.05.0",
+                            "short_name": "EllipVar",
+                            "short_code": "El*",
+                            "description": "Ellipsoidal variable Star"
+                        },
+                        {
+                            "identifier": "12.13.10.0",
+                            "short_name": "Symbiotic*",
+                            "short_code": "Sy*",
+                            "description": "Symbiotic Star"
+                        },
+                        {
+                            "identifier": "12.13.11.0",
+                            "short_name": "CataclyV*",
+                            "short_code": "CV*",
+                            "description": "Cataclysmic Variable Star",
+                            "subtypes": [
+                                {
+                                    "identifier": "12.13.11.2",
+                                    "short_name": "DQHer",
+                                    "short_code": "DQ*",
+                                    "description": "CV DQ Her type (intermediate polar)"
+                                },
+                                {
+                                    "identifier": "12.13.11.3",
+                                    "short_name": "AMHer",
+                                    "short_code": "AM*",
+                                    "description": "CV of AM Her type (polar)"
+                                },
+                                {
+                                    "identifier": "12.13.11.5",
+                                    "short_name": "Nova-like",
+                                    "short_code": "NL*",
+                                    "description": "Nova-like Star"
+                                },
+                                {
+                                    "identifier": "12.13.11.6",
+                                    "short_name": "Nova",
+                                    "short_code": "No*",
+                                    "description": "Nova"
+                                },
+                                {
+                                    "identifier": "12.13.11.7",
+                                    "short_name": "DwarfNova",
+                                    "short_code": "DN*",
+                                    "description": "Dwarf Nova"
+                                }
+                            ]
+                        },
+                        {
+                            "identifier": "12.13.12.0",
+                            "short_name": "XB",
+                            "short_code": "XB*",
+                            "description": "X-ray Binary",
+                            "subtypes": [
+                                {
+                                    "identifier": "12.13.12.2",
+                                    "short_name": "LMXB",
+                                    "short_code": "LXB",
+                                    "description": "Low Mass X-ray Binary"
+                                },
+                                {
+                                    "identifier": "12.13.12.3",
+                                    "short_name": "HMXB",
+                                    "short_code": "HXB",
+                                    "description": "High Mass X-ray Binary"
+                                }
+                            ]
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "identifier": "13.00.00.0",
+            "short_name": "ISM",
+            "short_code": "ISM",
+            "description": "Interstellar matter",
+            "subtypes": [
+                {
+                    "identifier": "13.01.00.0",
+                    "short_name": "PartofCloud",
+                    "short_code": "PoC",
+                    "description": "Part of Cloud"
+                },
+                {
+                    "identifier": "13.02.00.0",
+                    "short_name": "PN?",
+                    "short_code": "PN?",
+                    "description": "Possible Planetary Nebula"
+                },
+                {
+                    "identifier": "13.03.00.0",
+                    "short_name": "ComGlob",
+                    "short_code": "CGb",
+                    "description": "Cometary Globule"
+                },
+                {
+                    "identifier": "13.04.00.0",
+                    "short_name": "Bubble",
+                    "short_code": "bub",
+                    "description": "Bubble"
+                },
+                {
+                    "identifier": "13.06.00.0",
+                    "short_name": "EmObj",
+                    "short_code": "EmO",
+                    "description": "Emission Object"
+                },
+                {
+                    "identifier": "13.08.00.0",
+                    "short_name": "Cloud",
+                    "short_code": "Cld",
+                    "description": "Cloud",
+                    "subtypes": [
+                        {
+                            "identifier": "13.08.03.0",
+                            "short_name": "GalNeb",
+                            "short_code": "GNe",
+                            "description": "Galactic Nebula"
+                        },
+                        {
+                            "identifier": "13.08.04.0",
+                            "short_name": "BrNeb",
+                            "short_code": "BNe",
+                            "description": "Bright Nebula"
+                        },
+                        {
+                            "identifier": "13.08.06.0",
+                            "short_name": "DkNeb",
+                            "short_code": "DNe",
+                            "description": "Dark Cloud (nebula)"
+                        },
+                        {
+                            "identifier": "13.08.07.0",
+                            "short_name": "RfNeb",
+                            "short_code": "RNe",
+                            "description": "Reflection Nebula"
+                        },
+                        {
+                            "identifier": "13.08.12.0",
+                            "short_name": "MolCld",
+                            "short_code": "MoC",
+                            "description": "Molecular Cloud",
+                            "subtypes": [
+                                {
+                                    "identifier": "13.08.12.3",
+                                    "short_name": "Globule",
+                                    "short_code": "glb",
+                                    "description": "Globule (low-mass dark cloud)"
+                                },
+                                {
+                                    "identifier": "13.08.12.6",
+                                    "short_name": "denseCore",
+                                    "short_code": "cor",
+                                    "description": "Dense core"
+                                },
+                                {
+                                    "identifier": "13.08.12.8",
+                                    "short_name": "SFregion",
+                                    "short_code": "SFR",
+                                    "description": "Star forming region"
+                                }
+                            ]
+                        },
+                        {
+                            "identifier": "13.08.13.0",
+                            "short_name": "HVCld",
+                            "short_code": "HVC",
+                            "description": "High-velocity Cloud"
+                        }
+                    ]
+                },
+                {
+                    "identifier": "13.09.00.0",
+                    "short_name": "HII",
+                    "short_code": "HII",
+                    "description": "HII (ionized) region"
+                },
+                {
+                    "identifier": "13.10.00.0",
+                    "short_name": "PN",
+                    "short_code": "PN",
+                    "description": "Planetary Nebula"
+                },
+                {
+                    "identifier": "13.11.00.0",
+                    "short_name": "HIshell",
+                    "short_code": "sh",
+                    "description": "HI shell"
+                },
+                {
+                    "identifier": "13.12.00.0",
+                    "short_name": "SNR?",
+                    "short_code": "SR?",
+                    "description": "SuperNova Remnant Candidate"
+                },
+                {
+                    "identifier": "13.13.00.0",
+                    "short_name": "SNR",
+                    "short_code": "SNR",
+                    "description": "SuperNova Remnant"
+                },
+                {
+                    "identifier": "13.14.00.0",
+                    "short_name": "Circumstellar",
+                    "short_code": "cir",
+                    "description": "CircumStellar matter"
+                },
+                {
+                    "identifier": "13.14.01.0",
+                    "short_name": "outflow?",
+                    "short_code": "of?",
+                    "description": "Outflow candidate"
+                },
+                {
+                    "identifier": "13.14.15.0",
+                    "short_name": "Outflow",
+                    "short_code": "out",
+                    "description": "Outflow"
+                },
+                {
+                    "identifier": "13.14.16.0",
+                    "short_name": "HH",
+                    "short_code": "HH",
+                    "description": "Herbig-Haro Object"
+                }
+            ]
+        },
+        {
+            "identifier": "14.00.00.0",
+            "short_name": "Star",
+            "short_code": "*",
+            "description": "Star",
+            "subtypes": [
+                {
+                    "identifier": "14.01.00.0",
+                    "short_name": "*inCl",
+                    "short_code": "*iC",
+                    "description": "Star in Cluster"
+                },
+                {
+                    "identifier": "14.02.00.0",
+                    "short_name": "*inNeb",
+                    "short_code": "*iN",
+                    "description": "Star in Nebula"
+                },
+                {
+                    "identifier": "14.03.00.0",
+                    "short_name": "*inAssoc",
+                    "short_code": "*iA",
+                    "description": "Star in Association"
+                },
+                {
+                    "identifier": "14.04.00.0",
+                    "short_name": "*in**",
+                    "short_code": "*i*",
+                    "description": "Star in double system"
+                },
+                {
+                    "identifier": "14.05.00.0",
+                    "short_name": "V*?",
+                    "short_code": "V*?",
+                    "description": "Star suspected of Variability"
+                },
+                {
+                    "identifier": "14.06.00.0",
+                    "short_name": "Pec*",
+                    "short_code": "Pe*",
+                    "description": "Peculiar Star",
+                    "subtypes": [
+                        {
+                            "identifier": "14.06.01.0",
+                            "short_name": "HB*",
+                            "short_code": "HB*",
+                            "description": "Horizontal Branch Star"
+                        },
+                        {
+                            "identifier": "14.06.02.0",
+                            "short_name": "YSO",
+                            "short_code": "Y*O",
+                            "description": "Young Stellar Object",
+                            "subtypes": [
+                                {
+                                    "identifier": "14.06.02.4",
+                                    "short_name": "Ae*",
+                                    "short_code": "Ae*",
+                                    "description": "Herbig Ae/Be star"
+                                }
+                            ]
+                        },
+                        {
+                            "identifier": "14.06.05.0",
+                            "short_name": "Em*",
+                            "short_code": "Em*",
+                            "description": "Emission-line Star",
+                            "subtypes": [
+                                {
+                                    "identifier": "14.06.05.3",
+                                    "short_name": "Be*",
+                                    "short_code": "Be*",
+                                    "description": "Be Star"
+                                }
+                            ]
+                        },
+                        {
+                            "identifier": "14.06.06.0",
+                            "short_name": "BlueStraggler",
+                            "short_code": "BS*",
+                            "description": "Blue Straggler Star"
+                        },
+                        {
+                            "identifier": "14.06.10.0",
+                            "short_name": "RGB*",
+                            "short_code": "RG*",
+                            "description": "Red Giant Branch star"
+                        },
+                        {
+                            "identifier": "14.06.12.0",
+                            "short_name": "AGB*",
+                            "short_code": "AB*",
+                            "description": "Asymptotic Giant Branch Star (He-burning)",
+                            "subtypes": [
+                                {
+                                    "identifier": "14.06.12.3",
+                                    "short_name": "C*",
+                                    "short_code": "C*",
+                                    "description": "Carbon Star"
+                                },
+                                {
+                                    "identifier": "14.06.12.6",
+                                    "short_name": "S*",
+                                    "short_code": "S*",
+                                    "description": "S Star"
+                                }
+                            ]
+                        },
+                        {
+                            "identifier": "14.06.13.0",
+                            "short_name": "SG*",
+                            "short_code": "sg*",
+                            "description": "Evolved supergiant star"
+                        },
+                        {
+                            "identifier": "14.06.13.3",
+                            "short_name": "RedSG*",
+                            "short_code": "s*r",
+                            "description": "Red supergiant star"
+                        },
+                        {
+                            "identifier": "14.06.13.4",
+                            "short_name": "YellowSG*",
+                            "short_code": "s*y",
+                            "description": "Yellow supergiant star"
+                        },
+                        {
+                            "identifier": "14.06.13.5",
+                            "short_name": "BlueSG*",
+                            "short_code": "s*b",
+                            "description": "Blue supergiant star"
+                        },
+                        {
+                            "identifier": "14.06.15.0",
+                            "short_name": "post-AGB*",
+                            "short_code": "pA*",
+                            "description": "Post-AGB Star (proto-PN)"
+                        },
+                        {
+                            "identifier": "14.06.16.0",
+                            "short_name": "WD*",
+                            "short_code": "WD*",
+                            "description": "White Dwarf",
+                            "subtypes": [
+                                {
+                                    "identifier": "14.06.16.1",
+                                    "short_name": "pulsWD*",
+                                    "short_code": "ZZ*",
+                                    "description": "Pulsating White Dwarf"
+                                }
+                            ]
+                        },
+                        {
+                            "identifier": "14.06.17.0",
+                            "short_name": "low-mass*",
+                            "short_code": "LM*",
+                            "description": "Low-mass star (M<1solMass)"
+                        },
+                        {
+                            "identifier": "14.06.18.0",
+                            "short_name": "brownD*",
+                            "short_code": "BD*",
+                            "description": "Brown Dwarf (M<0.08solMass)"
+                        },
+                        {
+                            "identifier": "14.06.19.0",
+                            "short_name": "Neutron*",
+                            "short_code": "N*",
+                            "description": "Confirmed Neutron Star"
+                        },
+                        {
+                            "identifier": "14.06.23.0",
+                            "short_name": "OH/IR",
+                            "short_code": "OH*",
+                            "description": "OH/IR star"
+                        },
+                        {
+                            "identifier": "14.06.24.0",
+                            "short_name": "CH",
+                            "short_code": "CH*",
+                            "description": "Star with envelope of CH type"
+                        },
+                        {
+                            "identifier": "14.06.25.0",
+                            "short_name": "pMS*",
+                            "short_code": "pr*",
+                            "description": "Pre-main sequence Star",
+                            "subtypes": [
+                                {
+                                    "identifier": "14.06.25.3",
+                                    "short_name": "TTau*",
+                                    "short_code": "TT*",
+                                    "description": "T Tau-type Star"
+                                }
+                            ]
+                        },
+                        {
+                            "identifier": "14.06.30.0",
+                            "short_name": "WR*",
+                            "short_code": "WR*",
+                            "description": "Wolf-Rayet Star"
+                        }
+                    ]
+                },
+                {
+                    "identifier": "14.07.00.0",
+                    "short_name": "PM*",
+                    "short_code": "PM*",
+                    "description": "High proper-motion Star"
+                },
+                {
+                    "identifier": "14.08.00.0",
+                    "short_name": "HV*",
+                    "short_code": "HV*",
+                    "description": "High-velocity Star"
+                },
+                {
+                    "identifier": "14.09.00.0",
+                    "short_name": "V*",
+                    "short_code": "V*",
+                    "description": "Variable Star",
+                    "subtypes": [
+                        {
+                            "identifier": "14.09.01.0",
+                            "short_name": "Irregular_V*",
+                            "short_code": "Ir*",
+                            "description": "Variable Star of irregular type",
+                            "subtypes": [
+                                {
+                                    "identifier": "14.09.01.1",
+                                    "short_name": "Orion_V*",
+                                    "short_code": "Or*",
+                                    "description": "Variable Star of Orion Type"
+                                },
+                                {
+                                    "identifier": "14.09.01.2",
+                                    "short_name": "Rapid_Irreg_V*",
+                                    "short_code": "RI*",
+                                    "description": "Variable Star with rapid variations"
+                                }
+                            ]
+                        },
+                        {
+                            "identifier": "14.09.03.0",
+                            "short_name": "Eruptive*",
+                            "short_code": "Er*",
+                            "description": "Eruptive variable Star",
+                            "subtypes": [
+                                {
+                                    "identifier": "14.09.03.1",
+                                    "short_name": "Flare*",
+                                    "short_code": "Fl*",
+                                    "description": "Flare Star"
+                                },
+                                {
+                                    "identifier": "14.09.03.2",
+                                    "short_name": "FUOr",
+                                    "short_code": "FU*",
+                                    "description": "Variable Star of FU Ori type"
+                                },
+                                {
+                                    "identifier": "14.09.03.4",
+                                    "short_name": "Erupt*RCrB",
+                                    "short_code": "RC*",
+                                    "description": "Variable Star of R CrB type"
+                                },
+                                {
+                                    "identifier": "14.09.03.5",
+                                    "short_name": "RCrB_Candidate",
+                                    "short_code": "RC?",
+                                    "description": "Variable Star of R CrB type candiate"
+                                }
+                            ]
+                        },
+                        {
+                            "identifier": "14.09.04.0",
+                            "short_name": "RotV*",
+                            "short_code": "Ro*",
+                            "description": "Rotationally variable Star",
+                            "subtypes": [
+                                {
+                                    "identifier": "14.09.04.1",
+                                    "short_name": "RotV*alf2CVn",
+                                    "short_code": "a2*",
+                                    "description": "Variable Star of alpha2 CVn type"
+                                },
+                                {
+                                    "identifier": "14.09.04.3",
+                                    "short_name": "Pulsar",
+                                    "short_code": "Psr",
+                                    "description": "Pulsar"
+                                },
+                                {
+                                    "identifier": "14.09.04.4",
+                                    "short_name": "BYDra",
+                                    "short_code": "BY*",
+                                    "description": "Variable of BY Dra type"
+                                },
+                                {
+                                    "identifier": "14.09.04.5",
+                                    "short_name": "RSCVn",
+                                    "short_code": "RS*",
+                                    "description": "Variable of RS CVn type"
+                                }
+                            ]
+                        },
+                        {
+                            "identifier": "14.09.05.0",
+                            "short_name": "PulsV*",
+                            "short_code": "Pu*",
+                            "description": "Pulsating variable Star",
+                            "subtypes": [
+                                {
+                                    "identifier": "14.09.05.2",
+                                    "short_name": "RRLyr",
+                                    "short_code": "RR*",
+                                    "description": "Variable Star of RR Lyr type"
+                                },
+                                {
+                                    "identifier": "14.09.05.3",
+                                    "short_name": "Cepheid",
+                                    "short_code": "Ce*",
+                                    "description": "Cepheid variable Star"
+                                },
+                                {
+                                    "identifier": "14.09.05.5",
+                                    "short_name": "PulsV*delSct",
+                                    "short_code": "dS*",
+                                    "description": "Variable Star of delta Sct type"
+                                },
+                                {
+                                    "identifier": "14.09.05.6",
+                                    "short_name": "PulsV*RVTau",
+                                    "short_code": "RV*",
+                                    "description": "Variable Star of RV Tau type"
+                                },
+                                {
+                                    "identifier": "14.09.05.7",
+                                    "short_name": "PulsV*WVir",
+                                    "short_code": "WV*",
+                                    "description": "Variable Star of W Vir type"
+                                },
+                                {
+                                    "identifier": "14.09.05.8",
+                                    "short_name": "PulsV*bCep",
+                                    "short_code": "bC*",
+                                    "description": "Variable Star of beta Cep type"
+                                },
+                                {
+                                    "identifier": "14.09.05.9",
+                                    "short_name": "deltaCep",
+                                    "short_code": "cC*",
+                                    "description": "Classical Cepheid (delta Cep type)"
+                                },
+                                {
+                                    "identifier": "14.09.05.10",
+                                    "short_name": "gammaDor",
+                                    "short_code": "gD*",
+                                    "description": "Variable Star of gamma Dor type"
+                                },
+                                {
+                                    "identifier": "14.09.05.11",
+                                    "short_name": "pulsV*SX",
+                                    "short_code": "SX*",
+                                    "description": "Variable Star of SX Phe type (subdwarf)"
+                                }
+                            ]
+                        },
+                        {
+                            "identifier": "14.09.06.0",
+                            "short_name": "LPV*",
+                            "short_code": "LP*",
+                            "description": "Long-period variable star",
+                            "subtypes": [
+                                {
+                                    "identifier": "14.09.06.1",
+                                    "short_name": "Mira",
+                                    "short_code": "Mi*",
+                                    "description": "Variable Star of Mira Cet type"
+                                },
+                                {
+                                    "identifier": "14.09.06.4",
+                                    "short_name": "semi-regV*",
+                                    "short_code": "sr*",
+                                    "description": "Semi-regular pulsating Star"
+                                }
+                            ]
+                        },
+                        {
+                            "identifier": "14.09.08.0",
+                            "short_name": "SN",
+                            "short_code": "SN*",
+                            "description": "SuperNova"
+                        }
+                    ]
+                },
+                {
+                    "identifier": "14.14.00.0",
+                    "short_name": "Sub-stellar",
+                    "short_code": "su*",
+                    "description": "Sub-stellar object",
+                    "subtypes": [
+                        {
+                            "identifier": "14.14.02.0",
+                            "short_name": "Planet?",
+                            "short_code": "Pl?",
+                            "description": "Extra-solar Planet Candidate"
+                        },
+                        {
+                            "identifier": "14.14.10.0",
+                            "short_name": "Planet",
+                            "short_code": "Pl",
+                            "description": "Extra-solar Confirmed Planet"
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "identifier": "15.00.00.0",
+            "short_name": "Galaxy",
+            "short_code": "G",
+            "description": "Galaxy",
+            "subtypes": [
+                {
+                    "identifier": "15.01.00.0",
+                    "short_name": "PartofG",
+                    "short_code": "PoG",
+                    "description": "Part of a Galaxy"
+                },
+                {
+                    "identifier": "15.02.00.0",
+                    "short_name": "GinCl",
+                    "short_code": "GiC",
+                    "description": "Galaxy in Cluster of Galaxies",
+                    "subtypes": [
+                        {
+                            "identifier": "15.02.02.0",
+                            "short_name": "BClG",
+                            "short_code": "BiC",
+                            "description": "Brightest galaxy in a Cluster (BCG)"
+                        }
+                    ]
+                },
+                {
+                    "identifier": "15.03.00.0",
+                    "short_name": "GinGroup",
+                    "short_code": "GiG",
+                    "description": "Galaxy in Group of Galaxies"
+                },
+                {
+                    "identifier": "15.04.00.0",
+                    "short_name": "GinPair",
+                    "short_code": "GiP",
+                    "description": "Galaxy in Pair of Galaxies"
+                },
+                {
+                    "identifier": "15.05.00.0",
+                    "short_name": "High_z_G",
+                    "short_code": "HzG",
+                    "description": "Galaxy with high redshift"
+                },
+                {
+                    "identifier": "15.06.00.0",
+                    "short_name": "AbsLineSystem",
+                    "short_code": "ALS",
+                    "description": "Absorption Line system",
+                    "subtypes": [
+                        {
+                            "identifier": "15.06.01.0",
+                            "short_name": "Ly-alpha_ALS",
+                            "short_code": "LyA",
+                            "description": "Ly alpha Absorption Line system"
+                        },
+                        {
+                            "identifier": "15.06.02.0",
+                            "short_name": "DLy-alpha_ALS",
+                            "short_code": "DLA",
+                            "description": "Damped Ly-alpha Absorption Line system"
+                        },
+                        {
+                            "identifier": "15.06.03.0",
+                            "short_name": "metal_ALS",
+                            "short_code": "mAL",
+                            "description": "Metallic Absorption Line system"
+                        },
+                        {
+                            "identifier": "15.06.05.0",
+                            "short_name": "Ly-limit_ALS",
+                            "short_code": "LLS",
+                            "description": "Lyman limit system"
+                        },
+                        {
+                            "identifier": "15.06.08.0",
+                            "short_name": "Broad_ALS",
+                            "short_code": "BAL",
+                            "description": "Broad Absorption Line system"
+                        }
+                    ]
+                },
+                {
+                    "identifier": "15.07.00.0",
+                    "short_name": "RadioG",
+                    "short_code": "rG",
+                    "description": "Radio Galaxy"
+                },
+                {
+                    "identifier": "15.08.00.0",
+                    "short_name": "HII_G",
+                    "short_code": "H2G",
+                    "description": "HII Galaxy"
+                },
+                {
+                    "identifier": "15.09.00.0",
+                    "short_name": "LSB_G",
+                    "short_code": "LSB",
+                    "description": "Low Surface Brightness Galaxy"
+                },
+                {
+                    "identifier": "15.10.00.0",
+                    "short_name": "AGN_Candidate",
+                    "short_code": "AG?",
+                    "description": "Possible Active Galaxy Nucleus",
+                    "subtypes": [
+                        {
+                            "identifier": "15.10.07.0",
+                            "short_name": "QSO_Candidate",
+                            "short_code": "Q?",
+                            "description": "Possible Quasar"
+                        },
+                        {
+                            "identifier": "15.10.11.0",
+                            "short_name": "Blazar_Candidate",
+                            "short_code": "Bz?",
+                            "description": "Possible Blazar"
+                        },
+                        {
+                            "identifier": "15.10.17.0",
+                            "short_name": "BLLac_Candidate",
+                            "short_code": "BL?",
+                            "description": "Possible BL Lac"
+                        }
+                    ]
+                },
+                {
+                    "identifier": "15.11.00.0",
+                    "short_name": "EmG",
+                    "short_code": "EmG",
+                    "description": "Emission-line galaxy"
+                },
+                {
+                    "identifier": "15.12.00.0",
+                    "short_name": "StarburstG",
+                    "short_code": "SBG",
+                    "description": "Starburst Galaxy"
+                },
+                {
+                    "identifier": "15.13.00.0",
+                    "short_name": "BlueCompG",
+                    "short_code": "bCG",
+                    "description": "Blue compact Galaxy"
+                },
+                {
+                    "identifier": "15.14.00.0",
+                    "short_name": "LensedImage",
+                    "short_code": "LeI",
+                    "description": "Gravitationally Lensed Image",
+                    "subtypes": [
+                        {
+                            "identifier": "15.14.01.0",
+                            "short_name": "LensedG",
+                            "short_code": "LeG",
+                            "description": "Gravitationally Lensed Image of a Galaxy"
+                        },
+                        {
+                            "identifier": "15.14.07.0",
+                            "short_name": "LensedQ",
+                            "short_code": "LeQ",
+                            "description": "Gravitationally Lensed Image of a Quasar"
+                        }
+                    ]
+                },
+                {
+                    "identifier": "15.15.00.0",
+                    "short_name": "AGN",
+                    "short_code": "AGN",
+                    "description": "Active Galaxy Nucleus",
+                    "subtypes": [
+                        {
+                            "identifier": "15.15.01.0",
+                            "short_name": "LINER",
+                            "short_code": "LIN",
+                            "description": "LINER-type Active Galaxy Nucleus"
+                        },
+                        {
+                            "identifier": "15.15.02.0",
+                            "short_name": "Seyfert",
+                            "short_code": "SyG",
+                            "description": "Seyfert Galaxy",
+                            "subtypes": [
+                                {
+                                    "identifier": "15.15.02.1",
+                                    "short_name": "Seyfert_1",
+                                    "short_code": "Sy1",
+                                    "description": "Seyfert 1 Galaxy"
+                                },
+                                {
+                                    "identifier": "15.15.02.2",
+                                    "short_name": "Seyfert_2",
+                                    "short_code": "Sy2",
+                                    "description": "Seyfert 2 Galaxy"
+                                }
+                            ]
+                        },
+                        {
+                            "identifier": "15.15.03.0",
+                            "short_name": "Blazar",
+                            "short_code": "Bla",
+                            "description": "Blazar",
+                            "subtypes": [
+                                {
+                                    "identifier": "15.15.03.1",
+                                    "short_name": "BLLac",
+                                    "short_code": "BLL",
+                                    "description": "BL Lac - type object"
+                                },
+                                {
+                                    "identifier": "15.15.03.2",
+                                    "short_name": "OVV",
+                                    "short_code": "OVV",
+                                    "description": "Optically Violently Variable object"
+                                }
+                            ]
+                        },
+                        {
+                            "identifier": "15.15.04.0",
+                            "short_name": "QSO",
+                            "short_code": "QSO",
+                            "description": "Quasar"
+                        }
+                    ]
+                }
+            ]
+        }
+    ]
+}

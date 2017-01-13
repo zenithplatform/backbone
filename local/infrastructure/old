@@ -1,0 +1,198 @@
+
+
+class Agent(threading.Thread):
+    def __init__(self):
+        logging.basicConfig(stream=sys.stdout, level=logging.INFO)
+        self.log = logging.getLogger(__name__)
+
+        self.context = zmq.Context()
+        self.p_request_channel = None
+        self.p_callback_channel = None
+        self.dispatcher = None
+
+        self.setup()
+
+        threading.Thread.__init__(self)
+        self.daemon = True
+
+    def setup(self):
+        self.p_request_channel = self.context.socket(zmq.PULL)
+        self.p_request_channel.bind("tcp://*:18802")
+
+        self.p_callback_channel = self.context.socket(zmq.PULL)
+        self.p_callback_channel.bind("tcp://*:18803")
+
+        self.poller = zmq.Poller()
+        self.poller.register(self.p_request_channel, zmq.POLLIN)
+        self.poller.register(self.p_callback_channel, zmq.POLLIN)
+
+    def run(self):
+        self.dispatcher = Dispatcher()
+        self.log.info("[AGENT] Started")
+
+        while True:
+            channels = dict(self.poller.poll())
+
+            if channels.get(self.p_request_channel) == zmq.POLLIN:
+                p_rq_message = self.p_request_channel.recv_json()
+                self.execute()
+
+            # If the message came over the control channel, shut down the worker.
+            if channels.get(self.p_callback_channel) == zmq.POLLIN:
+                p_rs_message = self.p_callback_channel.recv_json()
+                self.log.info("[AGENT] : Processor %s finished: %s" % (p_rs_message['processor'], p_rs_message['result']))
+                self.log.info("[AGENT] : Calling dispatcher")
+
+                #send result to another process
+                self.dispatcher.dispatch(json.dumps(p_rs_message))
+
+        # while True:
+        #     self.log.info("[AGENT] Waiting for message")
+        #     p_message = self.p_callback_channel.recv_json()
+        #
+        #     self.log.info("[AGENT] : Processor %s finished: %s" % (p_message['processor'], p_message['result']))
+        #     self.log.info("[AGENT] : Calling dispatcher")
+        #
+        #     #send result to another process
+        #     self.dispatcher.dispatch(p_message['result'])
+
+    def execute(self):
+        dummy = DummyProcessor()
+        dummy.process('test')
+
+
+class Receiver(threading.Thread):
+    def __init__(self):
+        logging.basicConfig(stream=sys.stdout, level=logging.INFO)
+        self.log = logging.getLogger(__name__)
+
+        self.context = zmq.Context()
+        self.receiver_channel = None
+        self.agent_channel = None
+
+        self.setup()
+
+        threading.Thread.__init__(self)
+        self.daemon = True
+
+    def setup(self):
+        self.receiver_channel = self.context.socket(zmq.PULL)
+        self.receiver_channel.bind("tcp://*:18801")
+
+        self.agent_channel = self.context.socket(zmq.PUSH)
+        self.agent_channel.connect("tcp://localhost:18802")
+
+    def run(self):
+        self.log.info("[RECEIVER] Started")
+
+        while True:
+            self.log.info("[RECEIVER] Waiting for message")
+            message = self.receiver_channel.recv()
+            self.log.info("[RECEIVER] Passing data to agent")
+            self.agent_channel.send(message)
+            time.sleep(0.1)
+
+
+class Dispatcher(object):
+    def __init__(self):
+        logging.basicConfig(stream=sys.stdout, level=logging.INFO)
+        self.log = logging.getLogger(__name__)
+        self.context = zmq.Context()
+        self.setup()
+
+    def setup(self):
+        self.dispatch_channel = self.context.socket(zmq.PUB)
+        self.dispatch_channel.bind("tcp://*:18800")
+        time.sleep(1)
+
+        self.log.info("[DISPATCHER] Started")
+
+    def dispatch(self, payload):
+        self.log.info("[DISPATCHER] Sending results to another process")
+        self.dispatch_channel.send(payload)
+
+
+class BaseProcessor(object):
+    def __init__(self):
+        logging.basicConfig(stream=sys.stdout, level=logging.INFO)
+        self.log = logging.getLogger(__name__)
+        context = zmq.Context()
+        # Set up a channel to send result of work to the agent
+        self.result_channel = context.socket(zmq.PUSH)
+        self.result_channel.connect("tcp://127.0.0.1:18803")
+
+    def process(self, input, **kwargs):
+        message = { 'processor' : 'Dummy', 'result' : input }
+        self.log.info("[PROCESSOR] : Sending results to agent")
+        self.result_channel.send_json(message)
+
+
+# class BaseProcessor(Pipe):
+#     def setup(self):
+#         self.create_channel('result_channel', 18803, chtype.outbound, chkind.push)
+#
+#     def execute(self, *args, **kwargs):
+#         args = list(args)
+#         obj = args[0]
+#         self.log.info("[PROCESSOR] : Sending results to agent")
+#         self.get_channel('result_channel').send_json(obj=obj, **kwargs)
+
+
+# from ipc.initiator_OLD import Initiator
+# from ipc.receiver_OLD import Receiver
+from  multiprocessing import Process
+from infrastructure.receiver import Receiver
+from infrastructure.agent import Agent
+from infrastructure.initiator import Initiator
+import time, logging, sys
+
+def main():
+    agent_process = Process(target=start_agent, args=())
+    receiver_process = Process(target=start_receiver, args=())
+
+    agent_process.start()
+    receiver_process.start()
+
+    # pipeline_process = Process(target=start_pipeline, args=())
+    # pipeline_process.daemon = True
+    # pipeline_process.start()
+
+    init_process = Process(target=start_initiator, args=())
+    init_process.daemon = True
+    init_process.start()
+    #init_process.join()
+
+def start_agent():
+    Agent().run()
+
+def start_receiver():
+    Receiver().run()
+
+def start_pipeline():
+    #instances = []
+
+    Agent().run()
+    Receiver().run()
+
+    #instances.append(agent)
+    #instances.append(receiver)
+
+    #for instance in instances:
+     #   getattr(instance, 'run')()
+
+def start_initiator():
+    initiator = Initiator()
+    initiator.run()
+
+    #while True:
+    for x in range(0, 5):
+        initiator.send()
+        time.sleep(1)
+
+if __name__ == "__main__":
+    #logging.basicConfig(stream=sys.stdout, level=logging.INFO)
+    # logging.basicConfig(filename='D:\Programming\Astronomy\Dev\ZenithLogs\local_processing.log', level=logging.INFO)
+    # log = logging.getLogger('root')
+    # log.info('starting')
+
+    main()
