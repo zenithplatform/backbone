@@ -21,6 +21,9 @@ def main():
     agent_process.start()
     receiver_process.start()
 
+    while True:
+        time.sleep(0.1)
+
 def start_agent():
     #Agent().run()
     Agent().execute()

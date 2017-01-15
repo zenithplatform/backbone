@@ -8,6 +8,7 @@ class Dispatcher(Pipe):
         self.create_channel('dispatch_channel', 18800, chtype.inbound, chkind.publish)
 
     def execute(self, payload):
-        self.log.info("[DISPATCHER] Sending results to another process")
+        self.log.info("[DISPATCHER] Sending %s to another process"%(payload))
         self.get_channel('dispatch_channel').send(payload)
+        self.log.info("[DISPATCHER] Message sent")
 
