@@ -1,0 +1,58 @@
+{
+	"configuration": {
+		"pipeline": {
+			"receiver": {
+				"channels": {
+					"receive_channel": {
+						"port": 18801,
+						"type": "inbound",
+						"kind": "pull",
+                        "polling": false
+					},
+					"agent_channel": {
+						"port": 18802,
+						"type": "outbound",
+						"kind": "push",
+                        "polling": false
+					}
+				}
+			},
+			"agent": {
+				"channels": {
+					"p_request_channel": {
+						"port": 18802,
+						"type": "inbound",
+						"kind": "pull",
+                        "polling": true
+					},
+					"p_callback_channel": {
+						"port": 18803,
+						"type": "inbound",
+						"kind": "pull",
+                        "polling": true
+					}
+				}
+			},
+			"producer": {
+				"channels": {
+					"result_channel": {
+						"port": 18803,
+						"type": "outbound",
+						"kind": "push",
+                        "polling": false
+					}
+				}
+			},
+			"dispatcher": {
+				"channels": {
+					"dispatch_channel": {
+						"port": 18800,
+						"type": "inbound",
+						"kind": "publish",
+                        "polling": false
+					}
+				}
+			}
+		}
+	}
+}

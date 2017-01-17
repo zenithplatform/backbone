@@ -1,13 +1,12 @@
 __author__ = 'civa'
 
-from infrastructure.pipes import Pipe, chtype, chkind
+from infrastructure.pipes import Pipe
 
-#publishes everything to the remote process (C# app)
+#publishes everything to the remote process
 class Dispatcher(Pipe):
-    def setup(self):
-        self.create_channel('dispatch_channel', 18800, chtype.inbound, chkind.publish)
-
-    def execute(self, payload):
+    def send(self, *args, **kwargs):
+        args = list(args)
+        payload = args[0]
         self.log.info("[DISPATCHER] Sending %s to another process"%(payload))
         self.get_channel('dispatch_channel').send(payload)
         self.log.info("[DISPATCHER] Message sent")
