@@ -1,13 +1,13 @@
 __author__ = 'civa'
 
+import json, time
 from infrastructure.pipes import Pipe
 
-#publishes everything to the remote process
+IN = 'dispatcher_in_channel'
+OUT = 'dispatcher_out_channel'
+
 class Dispatcher(Pipe):
-    def send(self, *args, **kwargs):
-        args = list(args)
-        payload = args[0]
-        self.log.info("[DISPATCHER] Sending %s to another process"%(payload))
-        self.get_channel('dispatch_channel').send(payload)
-        self.log.info("[DISPATCHER] Message sent")
+    def receive(self):
+        message = self.get_channel(IN).recv_json()
+        self.send(OUT, json.dumps(message))
 

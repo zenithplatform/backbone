@@ -1,32 +1,22 @@
 __author__ = 'civa'
 
 import json
-from infrastructure.dispatcher import Dispatcher
-from infrastructure.pipes import LoopingPipe
-from processors.dummy import DummyProcessor
+from infrastructure.pipes import Pipe
 
-class Agent(LoopingPipe):
-    def run_processor(self):
-        metadata = {'config': self.config}
-        dummy = DummyProcessor(**metadata)
-        dummy.process('test')
+IN_REQUEST = 'agent_request_channel'
+OUT_PRODUCE = 'agent_produce_channel'
+IN_CALLBACK = 'agent_callback_channel'
+OUT_DISPATCH = 'agent_dispatch_channel'
 
-    def before_open(self):
-        self.dispatcher = Dispatcher('dispatcher', self.config)
-        self.log.info("[AGENT] Started")
-
-    def on_receive(self, channel_wrapper):
+class Agent(Pipe):
+    def distribute(self, channel_wrapper):
         name = channel_wrapper.channel_name
         channel = channel_wrapper.channel
 
-        if name == 'p_request_channel':
+        if name == IN_REQUEST:
             p_rq_message = channel.recv_json()
-            self.run_processor()
-        elif name == 'p_callback_channel':
+            self.send(OUT_PRODUCE, json.dumps(p_rq_message))
+        elif name == IN_CALLBACK:
             p_rs_message = channel.recv_json()
             data = p_rs_message['json_data']
-            self.log.info("[AGENT] : Processor %s finished: %s" % (data['processor'], data['result']))
-            self.log.info("[AGENT] : Calling dispatcher")
-
-            #send result to another process
-            self.dispatcher.send(json.dumps(p_rs_message))
+            self.send(OUT_DISPATCH, json.dumps(p_rs_message))

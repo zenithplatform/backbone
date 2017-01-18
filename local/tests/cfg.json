@@ -2,54 +2,82 @@
 	"configuration": {
 		"pipeline": {
 			"receiver": {
+				"mode": "single",
 				"channels": {
-					"receive_channel": {
+					"receiver_in_channel": {
 						"port": 18801,
 						"type": "inbound",
 						"kind": "pull",
-                        "polling": false
+						"polling": false
 					},
-					"agent_channel": {
+					"receiver_out_channel": {
 						"port": 18802,
 						"type": "outbound",
 						"kind": "push",
-                        "polling": false
+						"polling": false
 					}
 				}
 			},
 			"agent": {
+				"mode": "multiplex",
 				"channels": {
-					"p_request_channel": {
+					"agent_produce_channel": {
+						"port": 18805,
+						"type": "outbound",
+						"kind": "push",
+						"polling": false
+					},
+					"agent_dispatch_channel": {
+						"port": 18804,
+						"type": "outbound",
+						"kind": "push",
+						"polling": false
+					},
+					"agent_request_channel": {
 						"port": 18802,
 						"type": "inbound",
 						"kind": "pull",
-                        "polling": true
+						"polling": true
 					},
-					"p_callback_channel": {
+					"agent_callback_channel": {
 						"port": 18803,
 						"type": "inbound",
 						"kind": "pull",
-                        "polling": true
+						"polling": true
 					}
 				}
 			},
 			"producer": {
+				"mode": "single",
 				"channels": {
-					"result_channel": {
+					"producer_in_channel": {
+						"port": 18805,
+						"type": "inbound",
+						"kind": "pull",
+						"polling": false
+					},
+					"producer_out_channel": {
 						"port": 18803,
 						"type": "outbound",
 						"kind": "push",
-                        "polling": false
+						"polling": false
 					}
 				}
 			},
 			"dispatcher": {
+				"mode": "single",
 				"channels": {
-					"dispatch_channel": {
+					"dispatcher_in_channel": {
+						"port": 18804,
+						"type": "inbound",
+						"kind": "pull",
+						"polling": false
+					},
+					"dispatcher_out_channel": {
 						"port": 18800,
 						"type": "inbound",
 						"kind": "publish",
-                        "polling": false
+						"polling": false
 					}
 				}
 			}
