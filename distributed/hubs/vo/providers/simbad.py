@@ -3,8 +3,8 @@ from jsonweb import dumper
 from astroquery.simbad import Simbad
 
 from ..model.celestial_object import *
-from shared.serialization import CelestialObjectEncoder
-from shared.enums import Target
+from commons.serialization import CelestialObjectEncoder
+from commons.enums import Target
 from ..providers.exceptions import ProviderException
 from ..vo_config import VoConfig
 

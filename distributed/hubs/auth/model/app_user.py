@@ -2,8 +2,8 @@ __author__ = 'civa'
 
 from jsonweb.encode import to_object
 
-from hubs.auth.storage.dbaccess_OBSOLETE import DataProvider, DbAccessException
-from hubs.auth.model.enum import UserStatus
+from storage.dbaccess_OBSOLETE import DataProvider, DbAccessException
+from .enum import UserStatus
 
 def appuser_encoder(appuser):
     return {"user_id":              appuser.user_id,

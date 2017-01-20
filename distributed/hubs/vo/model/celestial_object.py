@@ -1,9 +1,8 @@
 __author__ = 'civa'
 
 from jsonweb.encode import to_object
-from hubs.vo.utils import vo_helpers
+from ..utils import vo_helpers
 from ..model.observation_data import *
-
 
 def celestial_object_collection_encoder(cel_object_collection):
     return {"objects":  cel_object_collection.objects}

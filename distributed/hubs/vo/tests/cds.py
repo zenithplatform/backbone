@@ -1,7 +1,7 @@
 __author__ = 'civa'
 from suds.client import Client
 from bs4 import BeautifulSoup, Tag, NavigableString
-from core.model.known_catalogs import *
+from distributed.hubs.vo.model.catalog import *
 import unicodedata, re
 import sys
 import string

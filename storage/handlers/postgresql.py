@@ -8,7 +8,6 @@ from hubs.auth.model.user import User, Base
 from storage.enums import Status
 from storage.handlers.base import BaseHandler
 
-
 class PostgresqlHandler(BaseHandler):
     def insert(self):
         engine = create_engine('sqlite:///sqlalchemy_example.db')

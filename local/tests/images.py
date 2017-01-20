@@ -1,9 +1,9 @@
 __author__ = 'civa'
 
-from processors import fits as FP
+from local.processors.fits import FITSProcessor
 
 def main():
-    fp = FP.FITSProcessor()
+    fp = FITSProcessor()
     fp.open("D:\\Programming\\Astronomy\\Dev\\SampleFiles\\gll_iem_v02_P6_V11_DIFFUSE.fit")
     fp.get_image()
 

@@ -2,8 +2,8 @@ __author__ = 'civa'
 
 from jsonweb.encode import dumper
 
-from hubs.vo.model.observation_data import *
-from hubs.vo.model.test_object import TestObject
+from distributed.hubs.vo.model.observation_data import *
+from distributed.hubs.vo.model.test_object import TestObject
 
 
 def main():

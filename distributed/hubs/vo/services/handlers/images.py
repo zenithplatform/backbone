@@ -8,7 +8,6 @@ from ...providers.params import BaseVOParams
 from ...providers.skyview import SkyViewProvider
 from ...providers.exceptions import ProviderException
 
-
 class ImagesHandler(tornado.web.RequestHandler):
 
     def initialize(self):

@@ -1,7 +1,7 @@
 __author__ = 'civa'
 
 import json
-from shared.utils import DictQuery
+from commons.utils import DictQuery
 
 LOOKUPS  = [
     '*params',

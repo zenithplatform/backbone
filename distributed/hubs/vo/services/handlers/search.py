@@ -4,9 +4,9 @@ import logging
 
 import tornado.web
 
-from hubs.vo.providers.params import BaseVOParams
-from hubs.vo.providers import ned, simbad, vizier
-from hubs.vo.providers.exceptions import ProviderException
+from ...providers.params import BaseVOParams
+from ...providers import ned, simbad, vizier
+from ...providers.exceptions import ProviderException
 
 
 class SearchHandler(tornado.web.RequestHandler):

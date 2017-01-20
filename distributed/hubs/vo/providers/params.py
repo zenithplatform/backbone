@@ -1,10 +1,10 @@
 __author__ = 'civa'
 
 import json
-from shared.api import BaseApiParams
-from shared.enums import Target
-from shared.converters import CoordinatesConverter
-from shared.utils import DictQuery
+from commons.api import BaseApiParams
+from commons.enums import Target
+from commons.converters import CoordinatesConverter
+from commons.utils import DictQuery
 
 class BaseVOParams(BaseApiParams):
     term = ''

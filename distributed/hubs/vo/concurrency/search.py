@@ -1,6 +1,6 @@
 __author__ = 'civa'
 
-from hubs.vo.concurrency.threadpool import ThreadPool
+from .threadpool import ThreadPool
 from ..providers import ned, simbad, vizier
 
 class Search():

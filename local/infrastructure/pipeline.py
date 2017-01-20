@@ -2,9 +2,9 @@ __author__ = 'civa'
 
 import os, time
 from multiprocessing import Process
-from config import PipelineConfig
-from infrastructure.receiver import Receiver
-from infrastructure.agent import Agent
+from commons.config import JsonConfig
+from .receiver import Receiver
+from .agent import Agent
 
 __location__ = os.path.realpath(os.path.join(os.getcwd(), os.path.dirname(__file__)))
 
@@ -13,7 +13,7 @@ class Pipeline(object):
         # root = os.path.abspath(os.path.join(__file__ ,"../../.."))
         # filename = os.path.join(root, 'vo_config.json')
         #os.path.join(__file__ ,"../../..")
-        self.config = PipelineConfig()
+        self.config = JsonConfig()
         self.config.load(filename=os.path.join(__location__, 'pipeline_config.json'))
 
         #Receiver('receiver', self.config).open()

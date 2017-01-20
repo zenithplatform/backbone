@@ -1,6 +1,6 @@
 __author__ = 'civa'
 
-from processors.base import BaseProcessor
+from base import BaseProcessor
 
 class DummyProcessor(BaseProcessor):
     def __init__(self, **kwargs):

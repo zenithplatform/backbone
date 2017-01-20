@@ -2,8 +2,8 @@ __author__ = 'civa'
 
 from astroquery.simbad import Simbad
 
-from shared.converters import TableConverter
-from hubs.vo.model.builders.extractors import CoordinatesExtractor
+from commons.converters import TableConverter
+from distributed.hubs.vo.model.builders.extractors import CoordinatesExtractor
 
 
 def run_simbad_all():

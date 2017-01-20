@@ -1,47 +1,47 @@
 __author__ = 'civa'
 
-import os, fnmatch
+from utils import DictQuery
+import os, json
 
-class JsonConfig():
-    max_iter_levels = 0
+class JsonConfig(dict):
+    def __init__(self, *args, **kwds):
+        self.name = None
 
-    def get_absolute_path(self):
-        path = self.traverse('*.cfg', os.path.dirname( __file__ ))
-        return path
+    def load(self, filename, verbose=1, *args, **kwds):
+        self.filename = filename
+        self.verbose = verbose
 
-    def find(self, pattern, path):
-        result = []
-        for root, dirs, files in os.walk(path):
-            for name in files:
-                if fnmatch.fnmatch(name, pattern):
-                    result.append(os.path.join(root, name))
-        return result
+        dict.__init__(self, *args, **kwds)
 
-    def traverse(self, pattern, path):
-        self.max_iter_levels += 1
+        if os.path.isfile(self.filename):
+            self._read()
+        else:
+            if self.verbose:
+                print "File '%s' doesn't exist." % (
+                    self.filename
+                )
 
-        try:
-            result = ''
-            for root, dirs, files in os.walk(path):
-                for name in files:
-                    if fnmatch.fnmatch(name, pattern):
-                        result = os.path.join(root, name)
-                        return result
-                #if os.path.dirname(path) == 'ZenithHub':
+    def _read(self):
+        if self.verbose:
+            print "Reading configuration from %r ..." % self.filename
 
+        f = file(self.filename, "r")
+        data = json.load(f)
+        f.close()
 
-                #path = os.path.abspath(os.path.join(path, os.pardir))
-                #path = os.path.join(os.path.dirname(path), '..')
-                #path = os.path.dirname(path)
+        dict.update(self, data)
 
-                #if path.endswith('ZenithHub'):
-                #    return None
+    def save(self):
+        if self.verbose:
+            print "Saving configuration to %r ..." % self.filename,
 
-                if self.max_iter_levels == 100:
-                    return None
+        f = file(self.filename, "w")
+        json.dump(self, f, sort_keys=True, indent=4)
+        f.close()
+        if self.verbose:
+            print "Configuration saved."
 
-            return self.traverse(pattern, os.path.dirname(path))
-        except:
-            raise
+    def find(self, key):
+        return DictQuery(self).get(key)
 
 

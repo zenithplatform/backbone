@@ -1,7 +1,7 @@
 import tornado.web
 
 from .handlers.search import SearchHandler
-from hubs.vo.services.handlers.spectra import SpectraHandler
+from .handlers.spectra import SpectraHandler
 from .handlers.general import GeneralHandler
 from .handlers.images import ImagesHandler
 from ..vo_config import VoConfig

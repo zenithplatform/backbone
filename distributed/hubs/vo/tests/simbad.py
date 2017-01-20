@@ -1,5 +1,5 @@
 from astroquery.simbad import Simbad
-from vo_hub.search_providers.simbad import SimbadSearch
+from distributed.hubs.vo.providers.simbad import SimbadProvider
 
 def main():
     query()

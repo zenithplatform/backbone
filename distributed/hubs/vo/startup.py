@@ -1,4 +1,4 @@
-from hubs.vo.entry import EntryPoint
+from entry import EntryPoint
 
 def main():
     entry = EntryPoint()

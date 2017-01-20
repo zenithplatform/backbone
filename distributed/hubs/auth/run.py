@@ -2,7 +2,7 @@ import tornado.auth
 import tornado.web
 import tornado.ioloop
 import tornado.httpserver
-from hubs.auth.services import auth_service
+from .services import auth_service
 
 def main():
     start_auth_service()

@@ -1,6 +1,6 @@
 import os.path
 import tornado.web
-from hubs.auth.services.handlers.authentication import *
+from .handlers.authentication import *
 
 class AuthServiceApplication(tornado.web.Application):
     def __init__(self):

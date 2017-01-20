@@ -8,7 +8,7 @@ import tornado.web
 import tornado.ioloop
 import tornado.httpserver
 
-from hubs.vo.services import vo_app
+from .services import vo_app
 import vo_config as cfg
 
 

@@ -1,5 +1,5 @@
-from hubs.vo.model.object_types import ObjectTypesLoader
-from hubs.vo.model.maps import FieldMapLoader
+from distributed.hubs.vo.model.object_types import ObjectTypesLoader
+from distributed.hubs.vo.model.maps import FieldMapLoader
 
 def o_types():
     o_types = ObjectTypesLoader().load()

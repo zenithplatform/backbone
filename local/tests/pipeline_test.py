@@ -2,19 +2,19 @@ __author__ = 'civa'
 import time, logging, sys, os
 sys.path.append('D:\Programming\Astronomy\Dev\Zenith\src\Backend\Local')
 from multiprocessing import Process
-from infrastructure.receiver import Receiver
-from infrastructure.agent import Agent
-from infrastructure.dispatcher import Dispatcher
-from infrastructure.producer import Producer
-from infrastructure.pipeline import Pipeline
-from infrastructure.config import PipelineConfig
+from local.infrastructure.receiver import Receiver
+from local.infrastructure.producer import Producer
+from local.infrastructure.pipeline import Pipeline
+from local.infrastructure.agent import Agent
+from commons.config import JsonConfig
+from local.infrastructure.dispatcher import Dispatcher
 
 __location__ = os.path.realpath(os.path.join(os.getcwd(), os.path.dirname(__file__)))
 
 def main():
     # pipeline = Pipeline()
     # pipeline.run()
-    config = PipelineConfig()
+    config = JsonConfig()
     config.load(filename=os.path.join(__location__, 'cfg.json'))
 
     receiver_process = Process(target=start_receiver, args=(config, ))

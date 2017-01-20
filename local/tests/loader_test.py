@@ -1,6 +1,6 @@
 __author__ = 'civa'
 
-from dynamic import loader
+from local.dynamic import loader
 
 def main():
     ldr = loader.Loader()

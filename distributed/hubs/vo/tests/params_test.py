@@ -1,6 +1,6 @@
 __author__ = 'civa'
 
-from hubs.vo.providers.params import BaseVOParams
+from distributed.hubs.vo.providers.params import BaseVOParams
 
 def main():
     base = BaseVOParams()

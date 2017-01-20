@@ -3,8 +3,8 @@ __author__ = 'civa'
 from astroquery.simbad.core import SimbadVOTableResult
 from astroquery.utils.commons import TableList
 from astropy.table.table import Table
-from shared.converters import TableConverter
-from shared.utils import DictQuery
+from commons.converters import TableConverter
+from commons.utils import DictQuery
 
 class RawResult(object):
 

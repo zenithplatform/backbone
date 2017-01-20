@@ -20,6 +20,10 @@ class ChannelWrapper(object):
                                                            self.metadata['kind'],
                                                            self.metadata['polling'])
 
+class PipeContext(object):
+    def __init__(self, channel):
+        self.channel = channel
+
 class looping_mode:
     single, multiplex = range(2)
 
@@ -116,7 +120,8 @@ class Pipe(threading.Thread):
 
             for channel_wrapper in self.polling_channels:
                 if self.poller_result.get(channel_wrapper.channel) == zmq.POLLIN:
-                    self.distribute(channel_wrapper)
+                    message = channel_wrapper.channel.recv_json()
+                    self.on_receive(message, PipeContext(channel_wrapper))
                     break
 
             time.sleep(0.1)
@@ -124,11 +129,26 @@ class Pipe(threading.Thread):
     def _start_receiving(self):
         if self.verbose:
             self.log.info("[{}] started".format(self.pipe_name))
+
         while True:
             if self.verbose:
                 self.log.info("[{}] waiting for message".format(self.pipe_name))
-            self.receive()
+
+            wrapper_channel = None
+            for name, wrapper in self.channels.iteritems():
+                if wrapper.kind == 'pull' or wrapper.kind == 'sub':
+                    wrapper_channel = wrapper
+                    break
+
+            self._receive_message(wrapper_channel)
             time.sleep(0.1)
+
+    def _receive_message(self, wrapper):
+        name = wrapper.channel_name
+        channel = wrapper.channel
+
+        message = channel.recv_json()
+        self.on_receive(message, PipeContext(wrapper))
 
     def run(self):
         if self.polling:
@@ -136,10 +156,7 @@ class Pipe(threading.Thread):
         else:
             self._start_receiving()
 
-    def distribute(self, channel_wrapper):
-        pass
-
-    def receive(self):
+    def on_receive(self, message, context):
         pass
 
     def before_send(self):

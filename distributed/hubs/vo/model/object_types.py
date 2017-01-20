@@ -1,7 +1,7 @@
 __author__ = 'civa'
 
 import os
-from shared.loaders import JsonDataLoader
+from commons.loaders import JsonDataLoader
 
 class ObjectTypes(object):
     otypes = []

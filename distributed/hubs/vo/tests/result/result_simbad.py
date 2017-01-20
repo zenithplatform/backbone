@@ -5,11 +5,11 @@ import os
 from astroquery.simbad import Simbad
 from jsonweb.encode import dumper
 
-from shared.converters import TableConverter
-from shared.serialization import ProviderResultEncoder
-from hubs.vo.model.result.base import ProviderResult
-from hubs.vo.vo_config import VoConfig
-from hubs.vo.providers.raw_result import RawResult, FuncResult, RawCoordinates
+from commons.converters import TableConverter
+from commons.serialization import ProviderResultEncoder
+from distributed.hubs.vo.model.result.base import ProviderResult
+from distributed.hubs.vo.vo_config import VoConfig
+from distributed.hubs.vo.providers.raw_result import RawResult, FuncResult, RawCoordinates
 
 
 def run_simbad_all():

@@ -8,9 +8,8 @@ from astroquery.vizier import Vizier
 
 from ..model.celestial_object import *
 from ..model.catalog import *
-from shared.enums import Target
-from hubs.vo.providers.exceptions import ProviderException
-
+from commons.enums import Target
+from .exceptions import ProviderException
 
 class VizierProvider():
 

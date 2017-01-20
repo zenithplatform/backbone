@@ -1,5 +1,5 @@
 from astroquery.simbad import Simbad
-from shared.converters import TableConverter
+from commons.converters import TableConverter
 
 def run():
     #result = get_coordinates('Betelgeuse')
