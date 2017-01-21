@@ -1,10 +1,44 @@
 __author__ = 'civa'
 
+import os, path
+import imp
 import importlib
 import inspect
 '''
 http://stackoverflow.com/a/30941292/522319
 '''
+
+class ModuleLoader(object):
+    def __init__(self, directory=''):
+        self.dir = directory
+
+    def find(self, module, cls=''):
+        package = None
+        klass = None
+
+        try:
+            fp, pathname, description = imp.find_module(module, [self.dir])
+        except ImportError:
+            print "unable to locate module {0} at {1}".format(module, self.dir)
+            return (None, None)
+
+        try:
+            package = imp.load_module(module, fp, pathname, description)
+        except Exception, e:
+            print e
+
+        if cls:
+            try:
+                klass = getattr(package, cls)
+            except Exception, e:
+                print e
+
+        return package, klass
+
+    def load(self, module):
+        full = os.path.join(self.dir, module + '.py')
+        return imp.load_source(module, full)
+
 class Loader(object):
     def __init__(self):
         self.modules = []

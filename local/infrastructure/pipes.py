@@ -60,7 +60,7 @@ class Pipe(threading.Thread):
         self.daemon = True
         self.setup()
 
-    def create_channel_ex(self, name, **kwargs):
+    def create_channel(self, name, **kwargs):
         address = "tcp://{0}:{1}"
         ch_kind = kwargs['kind']
         ch_port = kwargs['port']
@@ -98,7 +98,7 @@ class Pipe(threading.Thread):
             channels_config = self.config.find('configuration/pipeline/{}/channels'.format(self.pipe_name))
 
             for name, metadata in channels_config.iteritems():
-                self.create_channel_ex(name, **metadata)
+                self.create_channel(name, **metadata)
 
     def _start_polling(self):
         if self.verbose:
@@ -121,7 +121,7 @@ class Pipe(threading.Thread):
             for channel_wrapper in self.polling_channels:
                 if self.poller_result.get(channel_wrapper.channel) == zmq.POLLIN:
                     message = channel_wrapper.channel.recv_json()
-                    self.on_receive(message, PipeContext(channel_wrapper))
+                    self.on_receive(self.before_receive(message), PipeContext(channel_wrapper))
                     break
 
             time.sleep(0.1)
@@ -140,24 +140,34 @@ class Pipe(threading.Thread):
                     wrapper_channel = wrapper
                     break
 
+            # hook_func = getattr(self, "invert_op", None)
+            #
+            # if callable(invert_op):
+            #     invert_op(self.path.parent_op)
+
             self._receive_message(wrapper_channel)
             time.sleep(0.1)
 
+    #def _receive_message(self, wrapper, hook=hook):
     def _receive_message(self, wrapper):
         name = wrapper.channel_name
         channel = wrapper.channel
 
         message = channel.recv_json()
-        self.on_receive(message, PipeContext(wrapper))
+        self.on_receive(self.before_receive(message), PipeContext(wrapper))
+
+    def before_receive(self, message):
+        pass
+
+    #def on_receive(self, message, context, hook=None):
+    def on_receive(self, message, context):
+        pass
 
     def run(self):
         if self.polling:
             self._start_polling()
         else:
             self._start_receiving()
-
-    def on_receive(self, message, context):
-        pass
 
     def before_send(self):
         if self.verbose:
@@ -175,6 +185,9 @@ class Pipe(threading.Thread):
     def after_send(self):
         if self.verbose:
             self.log.info("[{}] sent".format(self.pipe_name))
+        pass
+
+    def on_error(self):
         pass
 
     def close(self):

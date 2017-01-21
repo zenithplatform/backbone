@@ -2,8 +2,7 @@ __author__ = 'civa'
 
 class BaseProcessor(object):
     def __init__(self, **kwargs):
-        pass
+        self.kwargs = kwargs
 
-    def process(self, *args, **kwargs):
-        args = list(args)
-        return args[0]
+    def process(self, json):
+        pass
