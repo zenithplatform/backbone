@@ -142,6 +142,8 @@ class Pipe(threading.Thread):
     def _start_polling(self):
         if self.verbose:
             self.log.info("[{}] started (multiplex)".format(self.pipe_name))
+            self.log.info("[{}] waiting for message".format(self.pipe_name))
+
         self.poller = zmq.Poller()
         self.poller_result = None
         self.polling_channels = []
@@ -152,20 +154,20 @@ class Pipe(threading.Thread):
                 self.polling_channels.append(wrapper)
 
         while self.active:
-            if self.verbose:
-                self.log.info("[{}] waiting for message".format(self.pipe_name))
-
             self.poller_result = dict(self.poller.poll())
 
             for channel_wrapper in self.polling_channels:
                 if self.poller_result.get(channel_wrapper.channel) == zmq.POLLIN:
                     try:
-                        message = channel_wrapper.channel.recv_json()
+                        message = channel_wrapper.channel.recv_json(zmq.NOBLOCK)
+                    except zmq.ZMQError, e:
+                        if e.errno == zmq.EAGAIN:
+                            time.sleep(0.1)
+                            continue
+                        else:
+                            raise PipeError("Can not receive data on channel {}.".format(channel_wrapper.channel_name), errors=e)
+                    else:
                         self.on_receive(message, PipeContext(channel_wrapper))
-                    except zmq.ZMQError as e:
-                        raise PipeError("Can not receive data on channel {}.".format(channel_wrapper.channel_name), errors=e)
-                    finally:
-                        break
 
             time.sleep(0.1)
 
@@ -174,11 +176,9 @@ class Pipe(threading.Thread):
     def _start_receiving(self):
         if self.verbose:
             self.log.info("[{}] started".format(self.pipe_name))
+            self.log.info("[{}] waiting for message".format(self.pipe_name))
 
         while self.active:
-            if self.verbose:
-                self.log.info("[{}] waiting for message".format(self.pipe_name))
-
             wrapper_channel = None
             for name, wrapper in self.channels.iteritems():
                 if wrapper.kind == 'pull' or wrapper.kind == 'sub':
@@ -193,10 +193,15 @@ class Pipe(threading.Thread):
         channel = wrapper.channel
 
         try:
-            message = channel.recv_json()
+            message = channel.recv_json(zmq.NOBLOCK)
+        except zmq.ZMQError, e:
+            if e.errno == zmq.EAGAIN:
+                time.sleep(0.1)
+                pass
+            else:
+                raise PipeError("Can not receive data on channel {}.".format(name), errors=e)
+        else:
             self.on_receive(message, PipeContext(wrapper))
-        except zmq.ZMQError as e:
-            raise PipeError("Can not receive data on channel {}.".format(name), errors=e)
 
     def _close(self, specific_channels=None):
         if not specific_channels:

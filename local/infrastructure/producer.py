@@ -1,9 +1,9 @@
 __author__ = 'civa'
 
 import json
-from .pipes import Pipe, messagehook
-from ..dynamic.loader import Loader
-from ..processors.dummy import DummyProcessor
+from local.infrastructure.pipes import Pipe, messagehook
+from local.dynamic.loader import Loader
+from local.processors.dummy import DummyProcessor
 
 IN = 'producer_in_channel'
 OUT = 'producer_out_channel'

@@ -1,7 +1,7 @@
 __author__ = 'civa'
 
 import json
-from .pipes import Pipe, messagehook
+from local.infrastructure.pipes import Pipe, messagehook
 
 IN_REQUEST = 'agent_request_channel'
 OUT_PRODUCE = 'agent_produce_channel'

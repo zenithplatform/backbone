@@ -1,7 +1,7 @@
 __author__ = 'civa'
 
 import time, json
-from .pipes import Pipe, messagehook
+from local.infrastructure.pipes import Pipe, messagehook
 
 IN = 'receiver_in_channel'
 OUT = 'receiver_out_channel'
