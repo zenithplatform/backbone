@@ -2,6 +2,25 @@ __author__ = 'civa'
 
 import zmq, threading, logging, sys, time
 
+class MessageHook(object):
+    def __init__ (self, hook):
+        self.hook = hook
+
+    def __call__(self, func):
+        def newf(*args, **kwargs):
+            pipe = args[0]
+            message = args[1]
+            modified_message = self.hook(pipe, message)
+
+            new_args = list(args)
+            new_args[1] = modified_message
+
+            func(*new_args, **kwargs)
+
+        newf.__doc__ = func.__doc__
+
+        return newf
+
 class ChannelWrapper(object):
     def __init__(self, channel_name, channel, metadata):
         self.channel_name = channel_name
@@ -121,7 +140,7 @@ class Pipe(threading.Thread):
             for channel_wrapper in self.polling_channels:
                 if self.poller_result.get(channel_wrapper.channel) == zmq.POLLIN:
                     message = channel_wrapper.channel.recv_json()
-                    self.on_receive(self.before_receive(message), PipeContext(channel_wrapper))
+                    self.on_receive(message, PipeContext(channel_wrapper))
                     break
 
             time.sleep(0.1)
@@ -140,26 +159,27 @@ class Pipe(threading.Thread):
                     wrapper_channel = wrapper
                     break
 
-            # hook_func = getattr(self, "invert_op", None)
-            #
-            # if callable(invert_op):
-            #     invert_op(self.path.parent_op)
-
             self._receive_message(wrapper_channel)
             time.sleep(0.1)
 
-    #def _receive_message(self, wrapper, hook=hook):
     def _receive_message(self, wrapper):
         name = wrapper.channel_name
         channel = wrapper.channel
 
         message = channel.recv_json()
-        self.on_receive(self.before_receive(message), PipeContext(wrapper))
 
-    def before_receive(self, message):
-        pass
+        # if self.has_hook():
+        #     print('Hooked')
 
-    #def on_receive(self, message, context, hook=None):
+        self.on_receive(message, PipeContext(wrapper))
+
+    # def has_hook(self):
+    #     for val in self.__dict__.values():
+    #         if hasattr(val, 'hooked'):
+    #             return True
+    #
+    #     return False
+
     def on_receive(self, message, context):
         pass
 
