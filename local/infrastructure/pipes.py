@@ -1,8 +1,13 @@
 __author__ = 'civa'
 
-import zmq, threading, logging, sys, time
+import zmq, threading, logging, sys, time, copy
 
-class MessageHook(object):
+class PipeError(Exception):
+    def __init__(self, message, errors=None):
+        super(PipeError, self).__init__(message)
+        self.errors = errors
+
+class messagehook(object):
     def __init__ (self, hook):
         self.hook = hook
 
@@ -62,6 +67,7 @@ class PipeOutput():
 
 class Pipe(threading.Thread):
     def __init__(self, name, config=None):
+        self.active = True
         self.context = zmq.Context()
 
         self.pipe_name = name
@@ -81,19 +87,28 @@ class Pipe(threading.Thread):
 
     def create_channel(self, name, **kwargs):
         address = "tcp://{0}:{1}"
-        ch_kind = kwargs['kind']
-        ch_port = kwargs['port']
-        ch_type = kwargs['type']
 
-        channel = self.context.socket(self.get_channel_kind(ch_kind))
-        val = getattr(chtype, ch_type)
+        if len(kwargs) == 0:
+            raise PipeError("Can not create channel {}. Check if configuration is valid.".format(name))
 
-        if val == chtype.inbound:
-            channel.bind(address.format("*", ch_port))
-        else:
-            channel.connect(address.format("localhost", ch_port))
+        channel_metadata = copy.deepcopy(kwargs)
 
-        self.channels[name] = ChannelWrapper(name, channel, kwargs)
+        ch_kind = kwargs.pop('kind', '')
+        ch_port = kwargs.pop('port', 0)
+        ch_type = kwargs.pop('type', '')
+
+        try:
+            channel = self.context.socket(self.get_channel_kind(ch_kind))
+            val = getattr(chtype, ch_type)
+
+            if val == chtype.inbound:
+                channel.bind(address.format("*", ch_port))
+            else:
+                channel.connect(address.format("localhost", ch_port))
+
+            self.channels[name] = ChannelWrapper(name, channel, channel_metadata)
+        except zmq.ZMQError as e:
+            raise PipeError("Can not create channel {}.".format(name), errors=e)
 
     def get_channel_kind(self, kind):
         val = getattr(chkind, kind)
@@ -111,10 +126,15 @@ class Pipe(threading.Thread):
         if name in self.channels:
             wrapper = self.channels[name]
             return wrapper.channel
+        else:
+            raise PipeError("Channel {} does not exist.".format(name))
 
     def setup(self):
         if self.config:
             channels_config = self.config.find('configuration/pipeline/{}/channels'.format(self.pipe_name))
+
+            if not channels_config:
+                raise PipeError("Configuration not found for {}".format(self.pipe_name))
 
             for name, metadata in channels_config.iteritems():
                 self.create_channel(name, **metadata)
@@ -131,7 +151,7 @@ class Pipe(threading.Thread):
                 self.poller.register(wrapper.channel, zmq.POLLIN)
                 self.polling_channels.append(wrapper)
 
-        while True:
+        while self.active:
             if self.verbose:
                 self.log.info("[{}] waiting for message".format(self.pipe_name))
 
@@ -139,17 +159,23 @@ class Pipe(threading.Thread):
 
             for channel_wrapper in self.polling_channels:
                 if self.poller_result.get(channel_wrapper.channel) == zmq.POLLIN:
-                    message = channel_wrapper.channel.recv_json()
-                    self.on_receive(message, PipeContext(channel_wrapper))
-                    break
+                    try:
+                        message = channel_wrapper.channel.recv_json()
+                        self.on_receive(message, PipeContext(channel_wrapper))
+                    except zmq.ZMQError as e:
+                        raise PipeError("Can not receive data on channel {}.".format(channel_wrapper.channel_name), errors=e)
+                    finally:
+                        break
 
             time.sleep(0.1)
+
+        #self._close(self.polling_channels)
 
     def _start_receiving(self):
         if self.verbose:
             self.log.info("[{}] started".format(self.pipe_name))
 
-        while True:
+        while self.active:
             if self.verbose:
                 self.log.info("[{}] waiting for message".format(self.pipe_name))
 
@@ -166,19 +192,24 @@ class Pipe(threading.Thread):
         name = wrapper.channel_name
         channel = wrapper.channel
 
-        message = channel.recv_json()
+        try:
+            message = channel.recv_json()
+            self.on_receive(message, PipeContext(wrapper))
+        except zmq.ZMQError as e:
+            raise PipeError("Can not receive data on channel {}.".format(name), errors=e)
 
-        # if self.has_hook():
-        #     print('Hooked')
+    def _close(self, specific_channels=None):
+        if not specific_channels:
+            for channel in self.channels:
+                channel.close()
+        else:
+            for channel in specific_channels:
+                channel.close()
 
-        self.on_receive(message, PipeContext(wrapper))
+        self.context.term()
 
-    # def has_hook(self):
-    #     for val in self.__dict__.values():
-    #         if hasattr(val, 'hooked'):
-    #             return True
-    #
-    #     return False
+    def _terminate_pipe(self):
+        self.active = False
 
     def on_receive(self, message, context):
         pass
@@ -198,7 +229,12 @@ class Pipe(threading.Thread):
         self.before_send()
         args = list(args)
         payload = args[0]
-        self.get_channel(to).send(payload)
+
+        try:
+            self.get_channel(to).send(payload)
+        except zmq.ZMQError as e:
+            raise PipeError("Can not send data to channel {}.".format(to), errors=e)
+
         self.after_send()
         pass
 
@@ -211,4 +247,6 @@ class Pipe(threading.Thread):
         pass
 
     def close(self):
-        pass
+        if self.verbose:
+            self.log.info("[{}] is closing".format(self.pipe_name))
+        self._terminate_pipe()

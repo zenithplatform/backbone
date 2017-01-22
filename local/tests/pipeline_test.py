@@ -12,8 +12,10 @@ from local.infrastructure.dispatcher import Dispatcher
 __location__ = os.path.realpath(os.path.join(os.getcwd(), os.path.dirname(__file__)))
 
 def main():
-    # pipeline = Pipeline()
+    # pipeline = Pipeline('main')
     # pipeline.run()
+
+
     config = JsonConfig()
     config.load(filename=os.path.join(__location__, 'cfg.json'))
 
@@ -21,12 +23,12 @@ def main():
     agent_process = Process(target=start_agent, args=(config, ))
     dispatcher_process = Process(target=start_dispatcher, args=(config, ))
     producer_process = Process(target=start_producer, args=(config, ))
-    #
+
     receiver_process.start()
     agent_process.start()
     producer_process.start()
     dispatcher_process.start()
-    #
+
     while True:
         time.sleep(0.1)
 

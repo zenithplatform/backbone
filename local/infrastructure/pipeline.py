@@ -1,37 +1,39 @@
 __author__ = 'civa'
 
-import os, time
+import os, time, logging, sys
 from multiprocessing import Process
 from commons.config import JsonConfig
 from .receiver import Receiver
 from .agent import Agent
+from .producer import Producer
+from .dispatcher import Dispatcher
 
 __location__ = os.path.realpath(os.path.join(os.getcwd(), os.path.dirname(__file__)))
 
-class Pipeline(object):
-    def __init__(self):
-        # root = os.path.abspath(os.path.join(__file__ ,"../../.."))
-        # filename = os.path.join(root, 'vo_config.json')
-        #os.path.join(__file__ ,"../../..")
+class Pipeline(Process):
+    def __init__(self, name):
+        Process.__init__(self)
+
+        self.name = name
+        self.running = True
         self.config = JsonConfig()
         self.config.load(filename=os.path.join(__location__, 'pipeline_config.json'))
-
-        #Receiver('receiver', self.config).open()
-        #Agent('agent', self.config).open()
-        Process(target=self.run_agent, args=()).start()
-        Process(target=self.run_receiver, args=()).start()
-
-        #agent_process.start()
-        #receiver_process.start()
-
-        while True:
-            time.sleep(0.1)
+        logging.basicConfig(stream=sys.stdout, level=logging.INFO)
+        self.log = logging.getLogger(__name__)
 
     def run(self):
-        pass
+        Receiver('receiver', config=self.config).run()
+        Agent('agent', config=self.config).run()
+        Producer('producer', config=self.config).run()
+        Dispatcher('dispatcher', config=self.config).run()
 
-    def run_receiver(self):
-        Receiver('receiver', config=self.config).open()
+        self.log.info('[%s] pipeline is running at process id: %s\n'
+                         % (self.name, os.getpid()))
 
-    def run_agent(self):
-        Agent('agent', polling=True, config=self.config).open()
+        # while self.running:
+        #     time.sleep(0.1)
+
+        #self.log.info('[%s] completed: %f\n' % (self.name, self.number))
+
+    def stop(self):
+        self.running = False

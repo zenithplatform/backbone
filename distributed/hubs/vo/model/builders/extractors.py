@@ -3,7 +3,7 @@ __author__ = 'civa'
 from astropy.coordinates import SkyCoord
 from astropy import units as u
 
-from shared.utils import DictQuery
+from commons.utils import DictQuery
 from ...utils.vo_helpers import get_constellation
 from ...model.object_types import ObjectTypesLoader
 
@@ -12,7 +12,7 @@ class DimensionsExtractor(object):
     def extract(self, **kwargs):
         otypes = ObjectTypesLoader().load()
 
-        result = kwargs['result']
+        result = kwargs.pop('result')
         otype = otypes.find(result['OTYPE'])
 
         if otype == 'Star':
@@ -30,14 +30,14 @@ class DimensionsExtractor(object):
 
 class MagnitudesExtractor(object):
     def extract(self, **kwargs):
-        result = kwargs['result']
+        result = kwargs.pop('result')
 
 class ColorIndexExtractor(object):
 
     color_index_table = {'UBV_B_V':'B-V_color_index', 'UBV_U_B': 'U-B_color_index'}
 
     def extract(self, **kwargs):
-        result = kwargs['result']
+        result = kwargs.pop('result')
         bv = result['UBV_B_V']
         ub = result['UBV_U_B']
 
@@ -46,7 +46,7 @@ class ColorIndexExtractor(object):
 class ProperMotionsExtractor(object):
 
     def extract(self, **kwargs):
-        result = kwargs['result']
+        result = kwargs.pop('result')
         pmra = result['PMRA']
         pmrdec = result['PMDEC']
 
@@ -57,7 +57,7 @@ class ConstellationExtractor(object):
         ra_ICRS = None
         dec_ICRS = None
 
-        coordinates = kwargs['coordinates']
+        coordinates = kwargs.pop('coordinates')
 
         if coordinates and coordinates['coordinates'] != 'Unknown':
             icrs = DictQuery(coordinates).get('coordinates/frame', where='ICRS', single=True)
@@ -76,7 +76,7 @@ class CoordinatesExtractor(object):
         self.skycoord = None
 
     def extract(self, **kwargs):
-        result = kwargs['result']
+        result = kwargs.pop('result')
         raw_coo = result['coordinates']
 
         self.get_skycoord('ICRS',
@@ -176,7 +176,7 @@ class FieldsExtractor(object):
         pass
 
     def extract(self, **kwargs):
-        result = kwargs['result']
+        result = kwargs.pop('result')
         identifiers = result['identifiers']
 
         new_dict = {}
