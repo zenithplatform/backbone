@@ -1,0 +1,422 @@
+__author__ = 'civa'
+
+import zmq, threading, logging, sys, time, copy
+
+class PipeError(Exception):
+    def __init__(self, message, errors=None):
+        super(PipeError, self).__init__(message)
+        self.errors = errors
+
+class messagehook(object):
+    def __init__ (self, hook):
+        self.hook = hook
+
+    def __call__(self, func):
+        def newf(*args, **kwargs):
+            pipe = args[0]
+            message = args[1]
+            modified_message = self.hook(pipe, message)
+
+            new_args = list(args)
+            new_args[1] = modified_message
+
+            func(*new_args, **kwargs)
+
+        newf.__doc__ = func.__doc__
+
+        return newf
+
+class PipeChannel(object):
+    def __init__(self, channel_name, channel, metadata):
+        self.channel_name = channel_name
+        self.channel = channel
+        self.metadata = metadata
+
+        self.port = self.metadata['port']
+        self.type = self.metadata['type']
+        self.kind = self.metadata['kind']
+        self.multiplex = self.metadata['multiplex']
+        self.exit = self.metadata['exit']
+        self.belongs_to = self.metadata['belongs_to']
+
+    def __repr__(self):
+        format_str = "Channel : Name -> {0}, Port -> {1}, Type -> {2}, Kind -> {3}, Is Multiplex -> {4}, Is Exit -> {5}, Belongs To -> {6}"
+        return format_str.format(self.channel_name,
+                                 self.port,
+                                 self.type,
+                                 self.kind,
+                                 self.multiplex,
+                                 self.exit,
+                                 self.belongs_to)
+
+class PipeDescriptor(object):
+    def __init__(self, context, name, mode='single', channels=None):
+        self.name = name
+        self.context = context
+        self.mode = mode
+        self.multiplex = (getattr(looping_mode, self.mode) == looping_mode.multiplex)
+        #self.channels = channels
+        self.channels = dict((x.channel_name, x) for x in channels if x.belongs_to == name and not x.entry and not x.exit)
+        self.entry = (x for x in channels if x.entry)
+        self.exit = (x for x in channels if x.exit)
+
+class PipeSetup(object):
+    @classmethod
+    def create(cls, pipe_name, config):
+        context_captured = False
+        _context = None
+
+        if config:
+            mode = config.find('configuration/pipeline/{}/mode'.format(pipe_name))
+            multiplex = (getattr(looping_mode, mode) == looping_mode.multiplex)
+            channels = []
+
+            for channel, context in ChannelSetup.fromconfig(config, pipe=pipe_name):
+                if not context_captured:
+                    _context = context
+                    context_captured = True
+
+                channels.append(channel)
+
+            return PipeDescriptor(_context, pipe_name, mode, channels)
+
+class ChannelSetup(object):
+    @classmethod
+    def fromconfig(cls, config, pipe=''):
+        if config:
+            context = zmq.Context()
+
+            if pipe == '':
+                channels = config.find('configuration/pipeline')
+
+                for pipe_name, vals in channels.iteritems():
+                    channels_config = config.find('configuration/pipeline/{}/channels'.format(pipe_name))
+
+                    return cls._create_pipe_channel(context, pipe_name, channels_config)
+            else:
+                channels_config = config.find('configuration/pipeline/{}/channels'.format(pipe))
+                return cls._create_pipe_channel(context, pipe, channels_config)
+
+    @classmethod
+    def _create_pipe_channel(cls, context, pipe_name, channels_config):
+        if not channels_config:
+            raise PipeError("Configuration not found for {}".format(pipe_name))
+
+        for name, metadata in channels_config.iteritems():
+            metadata['belongs_to'] = pipe_name
+            yield cls._new_channel(name, context, **metadata), context
+
+    @classmethod
+    def _new_channel(cls, name, context, **kwargs):
+        address = "tcp://{0}:{1}"
+
+        if len(kwargs) == 0:
+            raise PipeError("Can not create channel {}. Check if configuration is valid.".format(name))
+
+        channel_metadata = copy.deepcopy(kwargs)
+
+        ch_kind = kwargs.pop('kind', '')
+        ch_port = kwargs.pop('port', 0)
+        ch_type = kwargs.pop('type', '')
+
+        try:
+            channel = context.socket(cls.get_kind(ch_kind))
+            val = getattr(chtype, ch_type)
+
+            if val == chtype.inbound:
+                channel.bind(address.format("*", ch_port))
+            else:
+                channel.connect(address.format("localhost", ch_port))
+
+            return PipeChannel(name, channel, channel_metadata)
+        except zmq.ZMQError as e:
+            raise PipeError("Can not create channel {}.".format(name), errors=e)
+
+    @classmethod
+    def get_kind(cls, kind):
+        val = getattr(chkind, kind)
+
+        if val == chkind.pull:
+            return zmq.PULL
+        elif val == chkind.push:
+            return zmq.PUSH
+        elif val == chkind.publish:
+            return zmq.PUB
+        elif val == chkind.subscribe:
+            return zmq.SUB
+
+class PipeContext(object):
+    def __init__(self, channel):
+        self.channel = channel
+
+class looping_mode:
+    single, multiplex = range(2)
+
+class chtype:
+    inbound, outbound = range(2)
+
+class chkind:
+    push, pull, publish, subscribe = range(4)
+
+class PipeInput():
+    def __init__(self):
+        pass
+
+class PipeOutput():
+    def __init__(self):
+        pass
+
+class Pipe(threading.Thread):
+    # def __init__(self, name, config=None):
+    #     self.active = True
+    #     self.context = zmq.Context()
+    #
+    #     self.pipe_name = name
+    #     self.config = config
+    #     self.channels = {}
+    #
+    #     logging.basicConfig(stream=sys.stdout, level=logging.INFO)
+    #     self.log = logging.getLogger(__name__)
+    #     self.verbose = True
+    #
+    #     self.mode = self.config.find('configuration/pipeline/{}/mode'.format(self.pipe_name))
+    #     self.multiplex = (getattr(looping_mode, self.mode) == looping_mode.multiplex)
+    #
+    #     threading.Thread.__init__(self)
+    #     self.daemon = True
+    #     self.setup()
+
+    # def __init__(self, name, context, channels, mode='single'):
+    #     self.active = True
+    #     self.context = context
+    #     self.pipe_name = name
+    #     #convert to dictionary and skip exit channel if any
+    #     self.channels = dict((x.channel_name, x) for x in channels if not x.exit and x.belongs_to == self.pipe_name)
+    #     self.exit_channel = None
+    #
+    #     for channel in channels:
+    #         if channel.exit:
+    #             self.exit_channel = channel
+    #             break
+    #
+    #     logging.basicConfig(stream=sys.stdout, level=logging.INFO)
+    #     self.log = logging.getLogger(__name__)
+    #     self.verbose = True
+    #
+    #     self.mode = mode
+    #     self.multiplex = False
+    #
+    #     threading.Thread.__init__(self)
+    #     self.daemon = True
+
+    def __init__(self, descriptor):
+        self.active = True
+        self.descriptor = descriptor
+
+        # self.context = descriptor.context
+        # self.pipe_name = descriptor.name
+        #convert to dictionary and skip exit channel if any
+        #self.channels = dict((x.channel_name, x) for x in descriptor.channels if not x.exit)
+        #self.channels = dict((x.channel_name, x) for x in descriptor.channels)
+        #self.exit_channel = None
+
+        # for channel in channels:
+        #     if channel.exit:
+        #         self.exit_channel = channel
+        #         break
+
+        logging.basicConfig(stream=sys.stdout, level=logging.INFO)
+        self.log = logging.getLogger(__name__)
+        self.verbose = True
+
+        #self.mode = descriptor.multiplex
+        #self.multiplex = descriptor.multiplex
+
+        threading.Thread.__init__(self)
+        self.daemon = True
+
+    # @classmethod
+    # def fromconfig(cls, pipe_name, config=None):
+    #     pass
+    #
+    # @classmethod
+    # def withchannels(cls, name, channels=None):
+    #     pass
+
+    # def create_channel(self, name, **kwargs):
+    #     address = "tcp://{0}:{1}"
+    #
+    #     if len(kwargs) == 0:
+    #         raise PipeError("Can not create channel {}. Check if configuration is valid.".format(name))
+    #
+    #     channel_metadata = copy.deepcopy(kwargs)
+    #
+    #     ch_kind = kwargs.pop('kind', '')
+    #     ch_port = kwargs.pop('port', 0)
+    #     ch_type = kwargs.pop('type', '')
+    #
+    #     try:
+    #         channel = self.context.socket(self.get_channel_kind(ch_kind))
+    #         val = getattr(chtype, ch_type)
+    #
+    #         if val == chtype.inbound:
+    #             channel.bind(address.format("*", ch_port))
+    #         else:
+    #             channel.connect(address.format("localhost", ch_port))
+    #
+    #         self.channels[name] = ChannelWrapper(name, channel, channel_metadata)
+    #     except zmq.ZMQError as e:
+    #         raise PipeError("Can not create channel {}.".format(name), errors=e)
+    #
+    # def get_channel_kind(self, kind):
+    #     val = getattr(chkind, kind)
+    #
+    #     if val == chkind.pull:
+    #         return zmq.PULL
+    #     elif val == chkind.push:
+    #         return zmq.PUSH
+    #     elif val == chkind.publish:
+    #         return zmq.PUB
+    #     elif val == chkind.subscribe:
+    #         return zmq.SUB
+
+    def get_channel(self, name):
+        if name in self.channels:
+            wrapper = self.channels[name]
+            return wrapper.channel
+        else:
+            raise PipeError("Channel {} does not exist.".format(name))
+
+    # def setup(self):
+    #     if self.config:
+    #         channels_config = self.config.find('configuration/pipeline/{}/channels'.format(self.pipe_name))
+    #
+    #         if not channels_config:
+    #             raise PipeError("Configuration not found for {}".format(self.pipe_name))
+    #
+    #         for name, metadata in channels_config.iteritems():
+    #             self.create_channel(name, **metadata)
+
+    def _start_polling(self):
+        if self.verbose:
+            self.log.info("[{}] started (multiplex)".format(self.pipe_name))
+            self.log.info("[{}] waiting for message".format(self.pipe_name))
+
+        self.multiplexer = zmq.Poller()
+        self.multiplexer_result = None
+        self.multiplex_channels = []
+
+        for name, wrapper in self.channels.iteritems():
+            if wrapper.multiplex:
+                self.multiplexer.register(wrapper.channel, zmq.POLLIN)
+                self.multiplex_channels.append(wrapper)
+
+        while self.active:
+            self.multiplexer_result = dict(self.multiplexer.poll())
+
+            for channel_wrapper in self.multiplex_channels:
+                if self.multiplexer_result.get(channel_wrapper.channel) == zmq.POLLIN:
+                    try:
+                        message = channel_wrapper.channel.recv_json(zmq.NOBLOCK)
+                    except zmq.ZMQError, e:
+                        if e.errno == zmq.EAGAIN:
+                            time.sleep(0.1)
+                            continue
+                        else:
+                            raise PipeError("Can not receive data on channel {}.".format(channel_wrapper.channel_name), errors=e)
+                    else:
+                        self.on_receive(message, PipeContext(channel_wrapper))
+
+            time.sleep(0.1)
+
+        #self._close(self.polling_channels)
+
+    def _start_receiving(self):
+        if self.verbose:
+            self.log.info("[{}] started".format(self.pipe_name))
+            self.log.info("[{}] waiting for message".format(self.pipe_name))
+
+        while self.active:
+            wrapper_channel = None
+            for name, wrapper in self.channels.iteritems():
+                if wrapper.kind == 'pull' or wrapper.kind == 'sub':
+                    wrapper_channel = wrapper
+                    break
+
+            self._receive_message(wrapper_channel)
+            time.sleep(0.1)
+
+    def _receive_message(self, wrapper):
+        name = wrapper.channel_name
+        channel = wrapper.channel
+
+        try:
+            message = channel.recv_json(zmq.NOBLOCK)
+        except zmq.ZMQError, e:
+            if e.errno == zmq.EAGAIN:
+                time.sleep(0.1)
+                pass
+            else:
+                raise PipeError("Can not receive data on channel {}.".format(name), errors=e)
+        else:
+            self.on_receive(message, PipeContext(wrapper))
+
+    def _close(self, specific_channels=None):
+        if not specific_channels:
+            for channel in self.channels:
+                channel.close()
+        else:
+            for channel in specific_channels:
+                channel.close()
+
+        self.context.term()
+
+    def _terminate_pipe(self):
+        self.active = False
+
+    def on_receive(self, message, context):
+        pass
+
+    def run(self):
+        if self.multiplex:
+            self._start_polling()
+        else:
+            self._start_receiving()
+
+    def before_send(self):
+        if self.verbose:
+            self.log.info("[{}] sending".format(self.pipe_name))
+        pass
+
+    def send(self, to, *args, **kwargs):
+        self.before_send()
+        args = list(args)
+        payload = args[0]
+
+        try:
+            self.get_channel(to).send(payload)
+        except zmq.ZMQError as e:
+            raise PipeError("Can not send data to channel {}.".format(to), errors=e)
+
+        self.after_send()
+        pass
+
+    def after_send(self):
+        if self.verbose:
+            self.log.info("[{}] sent".format(self.pipe_name))
+        pass
+
+    def on_error(self):
+        pass
+
+    def close(self):
+        if self.verbose:
+            self.log.info("[{}] is closing".format(self.pipe_name))
+        self._terminate_pipe()
+
+    def exit(self, message):
+        if self.verbose:
+            self.log.info("[{0}] exiting through {1} with message {2}".format(self.pipe_name, self.exit_channel, message))
+
+        if self.exit_channel:
+            self.send(self.exit_channel, message)

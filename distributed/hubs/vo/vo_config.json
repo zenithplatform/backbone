@@ -57,7 +57,7 @@
 					  "class": "logging.handlers.RotatingFileHandler",
 					  "level": "INFO",
 					  "formatter": "simple",
-					  "filename": "D:\\Programming\\Astronomy\\Dev\\ZenithLogs\\info.log",
+					  "filename": "D:\\Programming\\Astronomy\\Dev\\ZenithLogs\\backbone_distr_info.log",
 					  "maxBytes": 10485760,
 					  "backupCount": 20,
 					  "encoding": "utf8"
@@ -67,7 +67,7 @@
 					  "class": "logging.handlers.RotatingFileHandler",
 					  "level": "ERROR",
 					  "formatter": "simple",
-					  "filename": "D:\\Programming\\Astronomy\\Dev\\ZenithLogs\\errors.log",
+					  "filename": "D:\\Programming\\Astronomy\\Dev\\ZenithLogs\\backbone_distr_errors.log",
 					  "maxBytes": 10485760,
 					  "backupCount": 20,
 					  "encoding": "utf8"

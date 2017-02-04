@@ -4,82 +4,148 @@
 			"receiver": {
 				"mode": "single",
 				"channels": {
-					"receiver_in_channel": {
+					"in": {
 						"port": 18801,
 						"type": "inbound",
 						"kind": "pull",
-						"polling": false
+						"multiplex": false,
+						"entry": true,
+						"exit": false
 					},
-					"receiver_out_channel": {
+					"out": {
 						"port": 18802,
 						"type": "outbound",
 						"kind": "push",
-						"polling": false
+						"multiplex": false,
+						"entry": false,
+						"exit": false
 					}
 				}
 			},
-			"agent": {
+			"distributor": {
 				"mode": "multiplex",
 				"channels": {
-					"agent_produce_channel": {
+					"produce": {
 						"port": 18805,
 						"type": "outbound",
 						"kind": "push",
-						"polling": false
+						"multiplex": false,
+						"entry": false,
+						"exit": false
 					},
-					"agent_dispatch_channel": {
+					"emit": {
 						"port": 18804,
 						"type": "outbound",
 						"kind": "push",
-						"polling": false
+						"multiplex": false,
+						"entry": false,
+						"exit": false
 					},
-					"agent_request_channel": {
+					"input": {
 						"port": 18802,
 						"type": "inbound",
 						"kind": "pull",
-						"polling": true
+						"multiplex": true,
+						"entry": false,
+						"exit": false
 					},
-					"agent_callback_channel": {
+					"callback": {
 						"port": 18803,
 						"type": "inbound",
 						"kind": "pull",
-						"polling": true
+						"multiplex": true,
+						"entry": false,
+						"exit": false
 					}
 				}
 			},
-			"producer": {
+			"executor": {
 				"mode": "single",
 				"channels": {
-					"producer_in_channel": {
+					"in": {
 						"port": 18805,
 						"type": "inbound",
 						"kind": "pull",
-						"polling": false
+						"multiplex": false,
+						"entry": false,
+						"exit": false
 					},
-					"producer_out_channel": {
+					"out": {
 						"port": 18803,
 						"type": "outbound",
 						"kind": "push",
-						"polling": false
+						"multiplex": false,
+						"entry": false,
+						"exit": false
 					}
 				}
 			},
-			"dispatcher": {
+			"emitter": {
 				"mode": "single",
 				"channels": {
-					"dispatcher_in_channel": {
+					"in": {
 						"port": 18804,
 						"type": "inbound",
 						"kind": "pull",
-						"polling": false
+						"multiplex": false,
+						"entry": false,
+						"exit": false
 					},
-					"dispatcher_out_channel": {
+					"out": {
 						"port": 18800,
 						"type": "inbound",
 						"kind": "publish",
-						"polling": false
+						"multiplex": false,
+						"entry": false,
+						"exit": true
 					}
 				}
+			}
+		},
+		"logging": {
+			"version": 1,
+			"disable_existing_loggers": false,
+			"formatters": {
+				"simple": {
+					"format": "%(asctime)s : %(message)s"
+				}
+			},
+			"handlers": {
+				"console": {
+					"class": "logging.StreamHandler",
+					"level": "DEBUG",
+					"formatter": "simple",
+					"stream": "ext://sys.stdout"
+				},
+				"info_file_handler": {
+					"class": "logging.handlers.RotatingFileHandler",
+					"level": "INFO",
+					"formatter": "simple",
+					"filename": "D:\\Programming\\Astronomy\\Dev\\ZenithLogs\\backbone_local_info.log",
+					"maxBytes": 10485760,
+					"backupCount": 20,
+					"encoding": "utf8"
+				},
+				"error_file_handler": {
+					"class": "logging.handlers.RotatingFileHandler",
+					"level": "ERROR",
+					"formatter": "simple",
+					"filename": "D:\\Programming\\Astronomy\\Dev\\ZenithLogs\\backbone_local_errors.log",
+					"maxBytes": 10485760,
+					"backupCount": 20,
+					"encoding": "utf8"
+				}
+			},
+			"loggers": {
+				"local.infrastructure.pipes": {
+					"level": "INFO",
+					"handlers": ["info_file_handler", "error_file_handler"],
+					"propagate": "no"
+				}
+			},
+			"root": {
+				"level": "INFO",
+				"handlers": ["console"]
 			}
 		}
 	}

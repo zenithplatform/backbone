@@ -7,4 +7,4 @@ class DummyProcessor(BaseProcessor):
         super(DummyProcessor, self).__init__(**kwargs)
 
     def process(self, *args, **kwargs):
-        return {'json_data': { 'processor' : 'Dummy', 'result' : 'result' }, 'req_id':'989yyt67'}
+        return {'processor': 'Dummy', 'result': 'result'}
