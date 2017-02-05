@@ -420,3 +420,25 @@ class Pipe(threading.Thread):
 
         if self.exit_channel:
             self.send(self.exit_channel, message)
+
+
+
+        # p = __import__('D:\Programming\Astronomy\Dev\ZenithPlatformSandbox\processors\fits.py')
+        # m = getattr(p, 'fits')
+        # c = getattr(m, 'FITSprocessor')
+        # instance = c()
+        # return instance
+        # ldr = Loader()
+        # ldr.load('processors.fits')
+
+        # dummy = DummyProcessor()
+        # result = dummy.process('test')
+
+
+        # def _exec_processor_test(self, msg_obj):
+    #     output_location = self.config.find('configuration/processing/processors_output')
+    #
+    #     proc_input = self._get_exec_input(msg_obj)
+    #     proc_input['output'] = output_location
+    #
+    #     return FITSProcessor().process(proc_input)

@@ -1,6 +1,20 @@
 __author__ = 'civa'
 
-import re
+import re, traceback, base64, zlib
+
+class ErrorUtils(object):
+    @classmethod
+    def compact_error(cls, encode=True, compress=False):
+        error_info = traceback.format_exc()
+        result = error_info
+
+        if encode:
+            result = base64.b64encode(error_info)
+
+        if compress:
+            result = zlib.compress(result)
+
+        return result
 
 class DictQuery(dict):
 

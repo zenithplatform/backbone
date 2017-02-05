@@ -21,6 +21,23 @@ class PipeMessage(object):
 
         return None
 
+    def append(self, data):
+        data['status'] = 'success'
+        data['status_code'] = 0
+
+        self.write_body(**data)
+
+    def append_error(self, error_info=None):
+        new_body = {}
+
+        new_body['status'] = 'error'
+        new_body['status_code'] = 1
+
+        if error_info:
+            new_body['error_info'] = error_info
+
+        self.body = new_body
+
     def write_body(self, **kwargs):
         new_body = {}
 
@@ -36,9 +53,10 @@ class PipeMessage(object):
         return ''
 
     def _validate(self):
+        return True
         #FOR TESTING PURPOSES ONLY!!!!
         #DELETE AFTER
-        return bool(random.getrandbits(1))
+        #return bool(random.getrandbits(1))
         #return (self.token == self._local_token())
 
     def _flatten_body(self, raw_body):

@@ -1,6 +1,6 @@
 __author__ = 'civa'
 
-import json
+import sys, os, json
 from astropy.io import fits
 from astropy.utils.data import download_file
 import matplotlib.pyplot as plt
@@ -11,7 +11,40 @@ class FITSProcessor(BaseProcessor):
         self.hdulist = None
         super(FITSProcessor, self).__init__(**kwargs)
 
-    def open(self, URI):
+    def process(self, processing_input):
+        input_dict = {}
+
+        try:
+            if not processing_input:
+                input_dict = self.kwargs
+            else:
+                if isinstance(processing_input, basestring):
+                    input_dict = json.loads(processing_input)
+                else:
+                    input_dict = processing_input
+
+            self.request_id = input_dict['request_id']
+            uri = input_dict['uri']
+            method = input_dict['method']
+            location = input_dict['output']
+
+            result = {}
+
+            if self._open(URI=uri):
+                if method == 'image':
+                    filename = self._extract_image(location)
+                    result = {'processor' : 'FITSProcessor', 'result': filename}
+                elif method == 'table':
+                    table_data = {}
+                    result = {'processor' : 'FITSProcessor', 'result': table_data}
+
+            return result
+        except:
+            raise
+        finally:
+            pass
+
+    def _open(self, URI):
         self.uri = URI
 
         if 'http' in self.uri:
@@ -27,42 +60,24 @@ class FITSProcessor(BaseProcessor):
         self.hdulist = fits.open(filepath)
         return True
 
-    def process(self, json_input=''):
-        input_dict = {}
+    def _get_hdu_data(self, method):
+        if method == 'image':
+            hdu = self.hdulist[0]
+            return hdu.data[0,:,:]
 
-        if json_input:
-            input_dict = json.loads(json_input)
-        else:
-            input_dict = self.kwargs
+    def _create_filename(self, directory, prefix):
+        name = prefix + '_' + 'extracted.png'
+        return os.path.join(directory, name)
 
-        uri = input_dict['uri']
-        req_id = input_dict['req_id']
-        method = input_dict['method']
-        output = input_dict['output']
+    def _extract_image(self, save_to=''):
+        img_data = self._get_hdu_data('image')
+        filename = self._create_filename(save_to, self.request_id)
 
-        result = {}
-
-        result_template = {
-            'result': result,
-            'req_id': req_id
-        }
-
-        if self.open(URI=uri):
-            if method == "Image":
-                self.get_image(output)
-                result = {'processor' : 'FITSProcessor', 'img_path': output}
-                result_template['result'] = result
-
-        return result_template
-
-    def get_image(self, save_to=''):
-        hdu = self.hdulist[0]
-        img_data = hdu.data[0,:,:]
-
-        img = plt.imshow(img_data, origin='lower')
-        plt.colorbar(img, orientation="vertical")
-
-        if not save_to:
-            save_to = 'temp.png'
-
-        plt.savefig(save_to, transparent=True)
+        if img_data.any():
+            self.log.info('processing image {0}'.format(filename))
+            img = plt.imshow(img_data, origin='lower')
+            plt.colorbar(img, orientation="vertical")
+            plt.savefig(filename, transparent=True)
+            plt.close()
+            self.log.info('done')
+            return filename

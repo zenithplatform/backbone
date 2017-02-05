@@ -11,9 +11,10 @@ class Receiver(Pipe):
     def preprocess(self, message, context):
         msg_obj = PipeMessage(message)
 
+        self.log.info('[receiver] received request : {0}'.format(msg_obj.meta['request_id']))
+
         if not msg_obj.valid:
-            invalid_message = {'status': 'Message is invalid', 'status_code': '1'}
-            msg_obj.write_body(**invalid_message)
+            msg_obj.append_error('Message is invalid')
             context.should_exit = True
 
         return msg_obj.reprJSON(), context
