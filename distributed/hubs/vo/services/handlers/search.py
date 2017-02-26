@@ -1,9 +1,7 @@
 __author__ = 'civa'
 
 import logging
-
 import tornado.web
-
 from ...providers.params import BaseVOParams
 from ...providers import ned, simbad, vizier
 from ...providers.exceptions import ProviderException

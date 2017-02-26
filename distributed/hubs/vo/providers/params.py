@@ -11,7 +11,12 @@ class BaseVOParams(BaseApiParams):
     target = Target.Object
 
     def unpack(self, json_data):
-        result = json.loads(json_data)
+        result = []
+
+        if isinstance(json_data, dict):
+            result = json_data
+        elif isinstance(json_data, basestring):
+            result = json.loads(json_data)
 
         super(BaseVOParams, self).unpack(json_data)
 
@@ -47,7 +52,12 @@ class ObjectParams(BaseVOParams):
             return "Search term : {0}".format(self.term)
 
     def unpack(self, json_data):
-        result = json.loads(json_data)
+        result = []
+
+        if isinstance(json_data, dict):
+            result = json_data
+        elif isinstance(json_data, basestring):
+            result = json.loads(json_data)
 
         if result and ('vo_params' in result):
             self.exact = DictQuery(result).get('vo_params/exact')
@@ -72,7 +82,12 @@ class CatalogParams(BaseVOParams):
     obsolete_catalogs = False
     all = False
     def unpack(self, json_data):
-        result = json.loads(json_data)
+        result = []
+
+        if isinstance(json_data, dict):
+            result = json_data
+        elif isinstance(json_data, basestring):
+            result = json.loads(json_data)
 
         if result and ('vo_params' in result):
             self.obsolete_catalogs = DictQuery(result).get('vo_params/obsolete_catalogs')
@@ -93,7 +108,12 @@ class ImageParams(BaseVOParams):
     survey = []
 
     def unpack(self, json_data):
-        result = json.loads(json_data)
+        result = []
+
+        if isinstance(json_data, dict):
+            result = json_data
+        elif isinstance(json_data, basestring):
+            result = json.loads(json_data)
 
         if result and ('vo_params' in result):
             self.coordinates = DictQuery(result).get('vo_params/coordinates')

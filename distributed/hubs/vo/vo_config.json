@@ -22,7 +22,14 @@
 				"server": "simbad.u-strasbg.fr",
 				"mirrors": ["simbad.harvard.edu"],
 				"timeout": 60
-			}
+			},
+            "resolver": {
+                  "search_fields": ["otype"],
+                  "log_filename": "zenith_resolver.log",
+                  "server": "simbad.u-strasbg.fr",
+                  "mirrors": ["simbad.harvard.edu"],
+                  "timeout": 60
+              }
 		},
 		"services": {
 			"url_schemes": {

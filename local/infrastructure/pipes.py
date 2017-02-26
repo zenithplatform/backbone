@@ -141,7 +141,7 @@ class PipeOutput():
     def __init__(self):
         pass
 
-class Pipe(threading.Thread):
+class Pipe(object):
     def __init__(self, pipeline, name, context, channels, config):
         self.active = True
         self.config = config
@@ -153,8 +153,7 @@ class Pipe(threading.Thread):
         self._setup_logging()
         self.log = logging.getLogger(__name__)
         self.verbose = True
-        threading.Thread.__init__(self)
-        self.daemon = True
+        self.thread = None
 
     def get_channel(self, name):
         if name in self.channels:
@@ -247,15 +246,20 @@ class Pipe(threading.Thread):
 
     def _terminate_pipe(self):
         self.active = False
+        self.thread.join()
 
     def on_receive(self, message, context):
         pass
 
-    def run(self):
+    def start(self):
         if self.multiplex:
-            self._start_polling()
+            self.thread = threading.Thread(target=self._start_polling)
         else:
-            self._start_receiving()
+            self.thread = threading.Thread(target=self._start_receiving)
+
+        self.thread.name = self.thread.name.replace('Thread', self.__class__.__name__)
+        self.thread.daemon = True
+        self.thread.start()
 
     def before_send(self, message):
         if self.verbose:

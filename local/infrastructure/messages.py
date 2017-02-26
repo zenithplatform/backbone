@@ -53,7 +53,7 @@ class PipeMessage(object):
         return ''
 
     def _validate(self):
-        return True
+        return False
         #FOR TESTING PURPOSES ONLY!!!!
         #DELETE AFTER
         #return bool(random.getrandbits(1))

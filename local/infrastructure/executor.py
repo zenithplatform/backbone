@@ -56,6 +56,8 @@ class Executor(Pipe):
 
         if process_routine:
             return process_routine(proc_input)
+        else:
+            raise Exception('Processor entry point is missing.')
 
     def _get_exec_input(self, msg_obj):
         return copy.deepcopy(msg_obj.body)
